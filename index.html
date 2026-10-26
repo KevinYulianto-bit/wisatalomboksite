@@ -1,0 +1,910 @@
+    <!DOCTYPE html>
+    <html lang="id">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Wisata Alam Lombok</title>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,800;1,700;1,800&family=Poppins:wght@400;500;600;700;800&display=swap"
+            rel="stylesheet">
+        <!-- Memanggil File CSS Eksternal -->
+        <link rel="stylesheet" href="style.css">
+    </head>
+
+    <body>
+
+        <!-- ===== NAVBAR (Kiri: Logo | Tengah: Menu | Kanan: Search + Login) ===== -->
+        <header class="navbar">
+            <div class="nav-kiri">
+                <a href="#home" class="logo">🏝️ Wisata Lombok</a>
+            </div>
+
+            <nav class="nav-tengah">
+                <a href="#home" class="nav-link aktif">Home</a>
+                <a href="#tentang" class="nav-link">Tentang Lombok</a>
+                <a href="#wisata" class="nav-link" data-kat="semua">Daftar Wisata</a>
+                <div class="dropdown" id="dropdown">
+                    <button class="dropdown-tombol" id="dropdownTombol" type="button">Kategori &#9662;</button>
+                    <div class="dropdown-menu">
+                        <a href="#wisata" data-kat="semua">Semua Kategori</a>
+                        <a href="#wisata" data-kat="pantai">🏖️ Pantai</a>
+                        <a href="#wisata" data-kat="bukit">🌄 Bukit</a>
+                        <a href="#wisata" data-kat="air-terjun">💧 Air Terjun</a>
+                        <a href="#wisata" data-kat="gunung">🌋 Gunung</a>
+                        <a href="#wisata" data-kat="danau">🏞️ Danau</a>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="nav-kanan">
+                <!-- 1. Search Engine Kanan dengan Autocomplete -->
+                <div class="nav-search-box" id="navSearchBox">
+                    <input type="text" id="navSearchInput" placeholder="Cari destinasi wisata..." autocomplete="off">
+                    <span class="search-icon">🔍</span>
+                    <div class="search-suggestions" id="searchSuggestions"></div>
+                </div>
+
+                <!-- 2. Fitur Login / Buat Akun -->
+                <div class="auth-area" id="authArea">
+                    <button class="btn-auth" id="btnOpenAuth" type="button">👤 Login / Daftar</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- ===== HOME / HERO ===== -->
+        <section id="home" class="hero">
+            <div class="slides">
+                <div class="slide aktif"
+                    style="background-image:url('https://tse2.mm.bing.net/th/id/OIP.lP-5sf17irOpS5AaJEwwfwHaE8?r=0&pid=Api&h=220&P=0')"
+                    data-nama="Pantai Pink — Pantai · Lombok Timur"></div>
+                <div class="slide"
+                    style="background-image:url('https://media.istockphoto.com/id/2203389929/id/foto/pemandangan-puncak-gunung-rinjani-yang-menghadap-ke-kaldera-dan-danau-kawah.jpg?s=612x612&w=0&k=20&c=TdYlp9-s1MYN4A4GIzMw51so_EE_9U5AChmgnJI9n60=')"
+                    data-nama="Gunung Rinjani — Gunung · Lombok Timur"></div>
+                <div class="slide"
+                    style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxAwcSd-2g47dLi6kRIxSWyAKebgEwquho3Gaa7zWIDOMZe0i2hiJ4sa8&s=10')"
+                    data-nama="Danau Segara Anak — Danau · Lombok Timur"></div>
+                <div class="slide"
+                    style="background-image:url('https://nagantour.com/wp-content/uploads/2025/01/Bukit-Merese-Lombok-7.jpg')"
+                    data-nama="Bukit Merese — Bukit · Lombok Tengah"></div>
+                <div class="slide"
+                    style="background-image:url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRzYD-OaJzGypqBd_p9XnXikF79Ry63RlNLdP5ELIUuEdZHTwXD8fVW4w&s=10')"
+                    data-nama="Air Terjun Jeruk Manis — Air Terjun · Lombok Timur"></div>
+            </div>
+            <div class="hero-teks">
+                <p class="label">Rekomendasi Destinasi</p>
+                <h1>Lombok, Where <em>Paradise</em> Comes Alive</h1>
+                <p class="sub">Lebih dari Sekadar Destinasi, Ini Tentang Petualangan yang Tak Terlupakan.</p>
+                <p class="deskripsi">Temukan pantai tersembunyi, bukit dengan panorama menakjubkan, air terjun yang
+                    menenangkan, dan keindahan Gunung Rinjani. Jelajahi destinasi terbaik Lombok beserta informasi wisata
+                    lengkap untuk merencanakan perjalanan impianmu.</p>
+                <a href="#wisata" class="tombol">Mulai Jelajah</a>
+                <a href="#tentang" class="tombol garis">Tentang Lombok</a>
+            </div>
+            <div class="keterangan" id="keterangan"></div>
+            <div class="titik" id="titik"></div>
+        </section>
+
+        <!-- ===== TENTANG LOMBOK ===== -->
+        <section id="tentang" class="tentang">
+            <div class="tentang-isi">
+                <div class="tentang-teks">
+                    <p class="label-kecil">Mengenal Lombok</p>
+                    <h2>Tentang Wisata <span>Lombok</span></h2>
+                    <p>Lombok adalah mahakarya alam di Nusa Tenggara Barat yang menyimpan pesona luar biasa. Mulai dari
+                        deburan ombak pantai berpasir putih dan merah muda, panorama bukit hijau yang menenangkan, air
+                        terjun asri di tengah hutan, hingga megahnya Gunung Rinjani dengan Danau Segara Anak yang ikonik.
+                        Website ini hadir untuk merangkum seluruh informasi dan keindahannya dalam satu tempat, memudahkanmu
+                        merencanakan perjalanan tanpa harus mencari satu per satu.</p>
+                </div>
+                <div class="tentang-foto">
+                    <img class="foto-a"
+                        src="https://tse2.mm.bing.net/th/id/OIP.lP-5sf17irOpS5AaJEwwfwHaE8?r=0&pid=Api&h=220&P=0"
+                        alt="Pantai Pink">
+                    <img class="foto-b"
+                        src="https://media.istockphoto.com/id/2203389929/id/foto/pemandangan-puncak-gunung-rinjani-yang-menghadap-ke-kaldera-dan-danau-kawah.jpg?s=612x612&w=0&k=20&c=TdYlp9-s1MYN4A4GIzMw51so_EE_9U5AChmgnJI9n60="
+                        alt="Gunung Rinjani">
+                </div>
+            </div>
+            <ul class="kategori-info">
+                <li style="--warna:#2E5AA7" data-filter="pantai"><span class="ikon">🏖️</span><b data-angka="8">8</b>Pantai</li>
+                <li style="--warna:#E8920F" data-filter="bukit"><span class="ikon">🌄</span><b data-angka="7">7</b>Bukit</li>
+                <li style="--warna:#3B8FD9" data-filter="air-terjun"><span class="ikon">💧</span><b data-angka="8">8</b>Air Terjun</li>
+                <li style="--warna:#1F3F7C" data-filter="gunung"><span class="ikon">🌋</span><b data-angka="4">4</b>Gunung</li>
+                <li style="--warna:#2A9D8F" data-filter="danau"><span class="ikon">🏞️</span><b data-angka="4">4</b>Danau</li>
+            </ul>
+        </section>
+
+        <!-- ===== DAFTAR WISATA (CLEAN DESIGN) ===== -->
+        <section id="wisata" class="wisata">
+            <div class="wisata-header">
+                <p class="label-kecil">Eksplorasi Destinasi</p>
+                <h2>Daftar Destinasi Wisata</h2>
+                <p class="sub-wisata">Pilih destinasi impianmu dan klik <strong>VISIT NOW</strong> untuk informasi detail & pemesanan tiket.</p>
+            </div>
+
+            <!-- Filter Kategori Cepat -->
+            <div class="filter-bar">
+                <button class="filter-chip aktif" data-kat="semua">Semua (31)</button>
+                <button class="filter-chip" data-kat="pantai">🏖️ Pantai</button>
+                <button class="filter-chip" data-kat="bukit">🌄 Bukit</button>
+                <button class="filter-chip" data-kat="air-terjun">💧 Air Terjun</button>
+                <button class="filter-chip" data-kat="gunung">🌋 Gunung</button>
+                <button class="filter-chip" data-kat="danau">🏞️ Danau</button>
+            </div>
+
+            <p class="info-hasil" id="jumlah"></p>
+            <p class="kosong" id="kosong">Wisata tidak ditemukan. Coba kata kunci atau kategori lain.</p>
+
+            <!-- Container Grid Kartu Clean (Di-render otomatis oleh JavaScript) -->
+            <div class="daftar-clean" id="daftarClean"></div>
+
+            <!-- DATA SUMBER WISATA (Disembunyikan, dibaca oleh Backend JavaScript) -->
+            <div id="raw-wisata-data" hidden>
+                <article class="pantai">
+                    <h2>Pantai Tanjung Aan</h2>
+                    <p>Kategori: Pantai</p>
+                    <p>Lokasi: <a href="https://maps.app.goo.gl/xxxxxxx" target="_blank">Lombok Tengah, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Pantai Tanjung Aan adalah salah satu wisata pantai di Lombok Tengah yang terkenal dengan pasir putihnya yang unik dan air laut yang jernih. Pantai ini memiliki area yang luas serta dikelilingi bukit hijau, sehingga cocok untuk menikmati pemandangan dan bersantai.</p>
+                    <p>Jam Buka: Buka setiap hari 24 Jam</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp0 (Gratis berdasarkan portal pariwisata)</p>
+                    <p>Rp 5.000,- tiket masuk menggunakan motor</p>
+                    <p>Rp 10.000,- tiket masuk menggunakan mobil</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://momopururu.com/wp-content/uploads/2022/10/Pantai-Tanjung-Aan-2048x1151.jpeg" alt="Foto Pantai Tanjung Aan">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Warung makan & minuman</li><li>Gazebo</li><li>Penyewaan snorkeling</li><li>Toilet</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="pantai">
+                    <h2>Pantai Kuta Mandalika</h2>
+                    <p>Kategori: Pantai</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/place/Pantai+Kuta+Lombok/@-8.8947518,116.2831703,14z" target="_blank">Lombok Tengah, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Pantai Kuta Mandalika merupakan salah satu wisata pantai di Lombok Tengah yang memiliki pasir putih dengan tekstur seperti butiran merica. Pantai ini juga memiliki air laut yang jernih dan pemandangan perbukitan hijau di sekitarnya, sehingga cocok untuk menikmati suasana pantai dan pemandangan alam.</p>
+                    <p>Jam Buka: Buka setiap hari 24 Jam</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp0 (Gratis berdasarkan portal pariwisata)</p>
+                    <p>Rp 5.000,- tiket masuk menggunakan motor</p>
+                    <p>Rp 10.000,- tiket masuk menggunakan mobil</p>
+                    <p>Rp 20.000,- tiket masuk menggunakan bus</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://zjglidcehtsqqqhbdxyp.supabase.co/storage/v1/object/public/atourin/images/destination/lombok/pantai-kuta-mandalika-profile1645517036.png?x-image-process=image/resize,p_100,limit_1/imageslim" alt="Foto Pantai Kuta Mandalika">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Warung makan & minuman</li><li>Gazebo</li><li>Toilet/Kamar mandi</li><li>Mushola/tempat ibadah</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="pantai">
+                    <h2>Pantai Selong Belanak</h2>
+                    <p>Kategori: Pantai</p>
+                    <p>Lokasi: <a href="https://indonesiakaya.com/pustaka-indonesia/pantai-selong-belanak-pantai-dengan-dua-jenis-ombak/" target="_blank">Lombok Tengah, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Pantai Selong Belanak merupakan pantai dengan pasir putih yang lembut, air laut yang jernih, serta pemandangan bukit hijau di sekitarnya. Pantai ini memiliki garis pantai berbentuk melengkung seperti bulan sabit dan suasana yang cocok untuk bersantai.</p>
+                    <p>Jam Buka: Buka setiap hari 24 Jam</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp0 (Gratis berdasarkan portal pariwisata)</p>
+                    <p>Rp 5.000,- tiket masuk menggunakan motor</p>
+                    <p>Rp 10.000,- tiket masuk menggunakan mobil</p>
+                    <p>Rp 20.000,- tiket masuk menggunakan bus</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://indonesiakaya.com/wp-content/uploads/2020/10/Pantai_Selong_Belanak_memiliki_kelebihan_tersendiri_yakni_adanya_dua_jenis_ombak_yang_berbeda.jpg" alt="Foto Pantai Selong Belanak">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Warung makan & minuman</li><li>Gazebo</li><li>Toilet/Kamar mandi</li><li>Mushola/tempat ibadah</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="pantai">
+                    <h2>Pantai Mawun</h2>
+                    <p>Kategori: Pantai</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Pantai+Mawun+Lombok+Tengah" target="_blank">Lombok Tengah, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Pantai Mawun merupakan pantai di bagian selatan Lombok yang memiliki pasir putih, air laut berwarna biru kehijauan, serta dua bukit hijau di sisi pantai. Bentuk pantainya seperti teluk dan suasananya relatif tenang, sehingga cocok untuk bersantai dan menikmati pemandangan.</p>
+                    <p>Jam Buka: Buka setiap hari 24 Jam</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Sekitar Rp 10.000,-/orang</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://thelangkahtravel.com/wp-content/uploads/2020/03/Pantai-Mawun-Lombok-1.jpg" alt="Foto Pantai Mawun">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Warung makan & minuman</li><li>Gazebo</li><li>Toilet/Kamar mandi</li><li>Mushola/tempat ibadah</li><li>Penginapan sekitar Pantai</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="pantai">
+                    <h2>Pantai Pink</h2>
+                    <p>Kategori: Pantai</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Pantai+Pink+Lombok+Timur" target="_blank">Lombok Timur, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Pantai Pink atau Pantai Tangsi merupakan pantai yang terkenal karena pasirnya berwarna merah muda. Warna tersebut berasal dari campuran pasir putih dengan pecahan karang merah. Pantai ini juga memiliki air laut yang jernih dan dikelilingi perbukitan hijau.</p>
+                    <p>Jam Buka: Buka setiap hari 24 Jam</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp 10.000,-/Wisatawan Domestik</p>
+                    <p>Rp 50.000,-/Wisatawan asing</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://tse2.mm.bing.net/th/id/OIP.lP-5sf17irOpS5AaJEwwfwHaE8?r=0&pid=Api&h=220&P=0" alt="Foto Pantai Pink">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Warung makan & minuman</li><li>Gazebo</li><li>Toilet</li><li>Penyewaan alat snorkeling</li><li>Penyewaan/perahu wisata</li><li>Mushola/tempat ibadah</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="pantai">
+                    <h2>Pantai Senggigi</h2>
+                    <p>Kategori: Pantai</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Pantai+Senggigi+Lombok+Barat" target="_blank">Lombok Barat, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Pantai Senggigi merupakan salah satu pantai terkenal di Lombok Barat yang memiliki garis pantai cukup panjang, air laut yang jernih, serta pemandangan perbukitan di sekitarnya. Pantai ini juga cocok untuk menikmati pemandangan matahari terbenam.</p>
+                    <p>Jam Buka: Buka setiap hari 24 Jam</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp 15.000,-/orang</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://thelangkahtravel.com/wp-content/uploads/2020/03/Pantai-Senggigi-Lombok-2.jpg" alt="Foto Pantai Senggigi">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Warung makan & minuman</li><li>Gazebo</li><li>Toilet</li><li>Penginapan di sekitar pantai</li><li>Mushola/tempat ibadah</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="pantai">
+                    <h2>Pantai Mangsit</h2>
+                    <p>Kategori: Pantai</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Pantai+Mangsit+Lombok+Barat" target="_blank">Lombok Barat, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Pantai Mangsit merupakan pantai di kawasan Senggigi yang memiliki pasir gelap, pantai yang landai, serta pemandangan laut dan sunset. Kawasan ini juga dikenal dengan keberadaan resort di tepi pantai.</p>
+                    <p>Jam Buka: Buka setiap hari 07.00-18.00 WITA</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp0 (Gratis berdasarkan portal pariwisata)</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://media-cdn.tripadvisor.com/media/photo-s/16/57/11/79/photo1jpg.jpg" alt="Foto Pantai Mangsit">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Warung makan & minuman</li><li>Gazebo</li><li>Toilet/Kamar mandi</li><li>Mushola/tempat ibadah</li><li>Shelter/berugak</li><li>Coffee house</li><li>Penyewaan/Perlengkapan aktivitas wisata</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="pantai">
+                    <h2>Pantai Nambung</h2>
+                    <p>Kategori: Pantai</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Pantai+Nambung+Lombok" target="_blank">Lombok Tengah, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Pantai Nambung memiliki pasir pantai, laut yang luas, dan perbukitan di sekitarnya. Daya tarik utamanya adalah air terjun asin yang terbentuk dari ombak laut yang menghantam tebing karang.</p>
+                    <p>Jam Buka: Buka setiap hari 08.00-16.00 WITA</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp 10.000,-/orang</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://res.klook.com/images/fl_lossy.progressive,q_65/c_fill,w_1072,h_1072/w_66,x_12,y_12,g_south_west,l_Klook_water_br_trans_yhcmh3/activities/fucab32wsmkahckl849m/PrivateTourSehariPenuhPantaiSemetiLombok.jpg" alt="Foto Pantai Nambung">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Warung makan & minuman</li><li>Gazebo</li><li>Penginapan</li><li>Toilet/Kamar mandi</li><li>Mushola/tempat ibadah</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="bukit">
+                    <h2>Bukit Selong</h2>
+                    <p>Kategori: Bukit</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Bukit+Selong+Sembalun+Lombok+Timur" target="_blank">Lombok Timur, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Bukit Selong merupakan wisata alam di kawasan Sembalun yang menawarkan pemandangan hamparan sawah, perbukitan, Desa Sembalun, dan Gunung Rinjani dari ketinggian. Akses menuju puncaknya cukup mudah karena tersedia tangga menuju area pandang.</p>
+                    <p>Jam Buka: Buka setiap hari 06.30-18.30 WITA</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp 3.000 / Rp 5.000,-/orang</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://www.lombokjourney.com/wp-content/uploads/2025/06/view-sawah-bukit-selong-lombok.webp" alt="Foto Bukit Selong">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Warung makan & kopi</li><li>Area camping</li><li>Toilet</li><li>Tempat duduk</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="bukit">
+                    <h2>Bukit Pergasingan</h2>
+                    <p>Kategori: Bukit</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Bukit+Pergasingan+Sembalun+Lombok+Timur" target="_blank">Lombok Timur, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Bukit Pergasingan merupakan wisata alam di kawasan Sembalun yang menawarkan pemandangan hamparan sawah, Desa Sembalun, perbukitan, dan Gunung Rinjani dari ketinggian sekitar 1.670 mdpl. Tempat ini juga terkenal sebagai lokasi untuk menikmati sunrise dan camping.</p>
+                    <p>Jam Buka: Buka setiap hari 24 Jam</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp 15.000,-/orang</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://valsatravel.com/storage/2025/12/Pergasingan3-1024x725.jpg" alt="Foto Bukit Pergasingan">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Warung makan & minuman</li><li>Pos registrasi</li><li>Toilet</li><li>Jasa pemandu lokal</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="bukit">
+                    <h2>Bukit Malimbu</h2>
+                    <p>Kategori: Bukit</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Bukit+Malimbu+Lombok+Utara" target="_blank">Lombok Utara, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Bukit Malimbu merupakan tempat wisata berupa perbukitan di kawasan Malaka yang terkenal dengan pemandangan laut, perbukitan hijau, dan sunset. Lokasinya berada di jalur pesisir sehingga cukup mudah dijangkau.</p>
+                    <p>Jam Buka: Buka setiap hari 24 Jam</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp0 (Gratis berdasarkan portal pariwisata)</p>
+                    <p>Rp 5.000,- tiket masuk menggunakan motor</p>
+                    <p>Rp 10.000,- tiket masuk menggunakan mobil</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://www.tempatwisata.pro/media/uploads/3136/59071f838b7a9262b1f71578e8692f10.jpg" alt="Foto Bukit Malimbu">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Warung makan & minuman</li><li>Gazebo</li><li>Toilet</li><li>Mushola/tempat ibadah</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="bukit">
+                    <h2>Bukit Anak Dara</h2>
+                    <p>Kategori: Bukit</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Bukit+Anak+Dara+Sembalun+Lombok+Timur" target="_blank">Lombok Timur, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Bukit Anak Dara merupakan wisata alam di kawasan Sembalun yang terkenal dengan pemandangan Gunung Rinjani, perbukitan, dan hamparan alam Sembalun. Bukit ini memiliki ketinggian sekitar 1.923 mdpl dan dikenal dengan jalur Tanjakan Cinta.</p>
+                    <p>Jam Buka: Buka setiap hari 07.00-15.00 WITA</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp 15.000,-/orang</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://blog.bookingtogo.com/wp-content/uploads/2022/06/Bukit-Anak-Dara-Lombok-Timur.jpg" alt="Foto Bukit Anak Dara">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Warung makan & minuman</li><li>Area camping</li><li>Toilet/Kamar mandi</li><li>Mushola/tempat ibadah</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="bukit">
+                    <h2>Bukit Batu Idung</h2>
+                    <p>Kategori: Bukit</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Bukit+Batu+Idung+Jembatan+Kembar+Lombok+Barat" target="_blank">Lombok Barat, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Bukit Batu Idung merupakan wisata alam dengan ketinggian sekitar 250 mdpl. Dari atas bukit, pengunjung dapat melihat pemandangan Lombok Barat hingga Kota Mataram. Tempat ini juga dikenal sebagai lokasi untuk menikmati sunrise dan sunset.</p>
+                    <p>Jam Buka: Buka setiap hari 24 Jam</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp0 (Gratis berdasarkan portal pariwisata)</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://mobillombok.com/wp-content/uploads/2020/03/Sunset-di-Bukit-Batu-Idung-sumber-ig-agungrinjani.jpg" alt="Foto Bukit Batu Idung">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Warung</li><li>Gazebo</li><li>Toilet</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="bukit">
+                    <h2>Bukit Merese</h2>
+                    <p>Kategori: Bukit</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Bukit+Merese+Lombok+Tengah" target="_blank">Lombok Tengah, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Bukit Merese merupakan wisata alam yang menawarkan pemandangan laut, Pantai Tanjung Aan, dan perbukitan hijau dari atas bukit. Tempat ini juga dikenal sebagai salah satu lokasi untuk menikmati sunrise dan sunset.</p>
+                    <p>Jam Buka: Buka setiap hari 05.00-19.00 WITA</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp 10.000,-/orang</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://nagantour.com/wp-content/uploads/2025/01/Bukit-Merese-Lombok-7.jpg" alt="Foto Bukit Merese">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Warung makan & minuman</li><li>Gazebo</li><li>Toilet</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="bukit">
+                    <h2>Bukit Nipah</h2>
+                    <p>Kategori: Bukit</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Bukit+Nipah+Malaka+Lombok+Utara" target="_blank">Lombok Utara, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Bukit Nipah merupakan wisata alam yang berada di kawasan pesisir Malaka. Dari atas bukit, pengunjung dapat menikmati pemandangan laut, perbukitan hijau, dan kawasan Pantai Nipah.</p>
+                    <p>Jam Buka: Buka setiap hari 24 Jam</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp0 (Gratis berdasarkan portal pariwisata)</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://lomboktourbooking.com/wp-content/uploads/2025/05/Desain-tanpa-judul-1-1.png" alt="Bukit Nipah">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Warung makan & minuman</li><li>Gazebo</li><li>Toilet/Kamar mandi</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="air-terjun">
+                    <h2>Air Terjun Jeruk Manis</h2>
+                    <p>Kategori: Air Terjun</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Air+Terjun+Jeruk+Manis+Kembang+Kuning+Lombok+Timur" target="_blank">Lombok Timur, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Air Terjun Jeruk Manis merupakan wisata alam di kawasan kaki Gunung Rinjani dengan suasana hutan yang masih asri. Air terjunnya memiliki ketinggian sekitar 30 meter dan dapat dicapai melalui jalur trekking sekitar 1-1,5 km dari area parkir.</p>
+                    <p>Jam Buka: Buka setiap hari 08.00-17.00 WITA</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp 15.000,-/orang</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQRzYD-OaJzGypqBd_p9XnXikF79Ry63RlNLdP5ELIUuEdZHTwXD8fVW4w&s=10" alt="Foto Air Terjun Jeruk Manis">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Warung makan & minuman</li><li>Gazebo</li><li>Toilet</li><li>Jalur trekking</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="air-terjun">
+                    <h2>Air Terjun Timponan</h2>
+                    <p>Kategori: Air Terjun</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Air+Terjun+Timponan+Batu+Mekar+Lombok+Barat" target="_blank">Lombok Barat, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Air Terjun Timponan merupakan wisata alam yang berada di kawasan hutan dengan suasana yang masih asri. Air terjun ini dikelilingi pepohonan dan tebing yang ditumbuhi lumut, serta memiliki kolam alami dengan air yang jernih.</p>
+                    <p>Jam Buka: Buka setiap hari 08.00-17.00 WITA</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp 2.000,-/orang (dapat berubah sewaktu-waktu)</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://rricoid-assets.obs.ap-southeast-4.myhuaweicloud.com/berita/Mataram/o/1753058622016-air_terjun_timponan/hsvsfak3b8zv83q.jpeg" alt="Foto Air Terjun Timponan">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Warung makan & minuman</li><li>Toilet</li><li>Area camping</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="air-terjun">
+                    <h2>Air Terjun Tibu Atas</h2>
+                    <p>Kategori: Air Terjun</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Air+Terjun+Tibu+Atas+Batu+Mekar+Lombok+Barat" target="_blank">Lombok Barat, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Air Terjun Tibu Atas merupakan wisata alam dengan suasana yang masih asri, air yang jernih, dan kolam alami di bawah air terjun. Lokasinya dapat dicapai dengan berjalan kaki sekitar 200 meter dari area parkir.</p>
+                    <p>Jam Buka: Buka setiap hari 24 Jam</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp 5.000,-/orang</p>
+                    <p>Rp 5.000,- tiket masuk menggunakan motor</p>
+                    <p>Rp 10.000,- tiket masuk menggunakan mobil</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://zjglidcehtsqqqhbdxyp.supabase.co/storage/v1/object/public/atourin/images/destination/lombok/air-terjun-tibu-atas-profile1645691388.jpeg?x-image-process=image/resize,p_100,limit_1/imageslim" alt="Foto Air Terjun Tibu Atas">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Warung makan & minuman</li><li>Gazebo</li><li>Toilet</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="air-terjun">
+                    <h2>Air Terjun Kerta Gangga</h2>
+                    <p>Kategori: Air Terjun</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Air+Terjun+Kerta+Gangga+Lombok+Utara" target="_blank">Lombok Utara, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Air Terjun Kerta Gangga merupakan wisata alam yang memiliki tiga tingkatan air terjun dalam satu kawasan. Di sekitarnya terdapat persawahan dan perbukitan hijau, serta kolam alami yang bisa digunakan untuk bermain air atau berendam.</p>
+                    <p>Jam Buka: Buka setiap hari 07.00-16.00 WITA</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp 5.000,-/orang</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://datulomboktour.com/wp-content/uploads/2020/02/Air-Terjun-Kerta-Gangga-Lombok1.jpg" alt="Foto Air Terjun Kerta Gangga">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Warung makan & minuman</li><li>Gazebo</li><li>Toilet/Kamar mandi</li><li>Mushola/tempat ibadah</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="air-terjun">
+                    <h2>Air Terjun Semporonan</h2>
+                    <p>Kategori: Air Terjun</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Air+Terjun+Semporonan+Timbanuh+Lombok+Timur" target="_blank">Lombok Timur, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Air Terjun Semporonan merupakan wisata alam yang masih cukup asri dengan air terjun sekitar 40 meter. Kawasan sekitarnya dikelilingi hutan dan perkebunan sehingga suasananya cukup tenang.</p>
+                    <p>Jam Buka: Buka setiap hari 08.30-17.00 WITA</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp 5.000,-/orang</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://assets.pikiran-rakyat.com/crop/0x0:0x0/720x0/webp/photo/2024/06/03/1657472563.jpeg" alt="Foto Air Terjun Semporonan">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Toilet</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="air-terjun">
+                    <h2>Air Terjun Gunung Janggot</h2>
+                    <p>Kategori: Air Terjun</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Air+Terjun+Gunung+Janggot+Aik+Berik+Lombok+Tengah" target="_blank">Lombok Tengah, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Air Terjun Gunung Janggot merupakan wisata alam yang berada di kawasan hutan dengan suasana sejuk dan asri. Airnya jernih dan dikelilingi tebing serta pepohonan hijau.</p>
+                    <p>Jam Buka: Buka setiap hari 07.00-18.00 WITA</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp 5.000,-/orang</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://assets-a1.kompasiana.com/items/album/2025/01/06/img-20250106-wa0008-677b4bf4ed6415442632aa24.jpg" alt="Foto Air Terjun Gunung Janggot">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Tempat makan & minuman</li><li>Toilet/Kamar mandi</li><li>Mushola/tempat ibadah</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="air-terjun">
+                    <h2>Air Terjun Pancor Kopong</h2>
+                    <p>Kategori: Air Terjun</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Air+Terjun+Pancor+Kopong+Aikdewa+Lombok+Timur" target="_blank">Lombok Timur, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Air Terjun Pancor Kopong berada di tengah hamparan sawah dengan pemandangan tebing dan pepohonan yang masih alami. Airnya jernih dan terdapat kolam yang bisa digunakan untuk berendam.</p>
+                    <p>Jam Buka: Buka setiap hari 06.00-20.00 WITA</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp0 (Gratis berdasarkan portal pariwisata)</p>
+                    <p>Rp 2.000,- tiket masuk menggunakan motor</p>
+                    <p>Rp 5.000,- tiket masuk menggunakan mobil</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTKuQQm3NUrCqmfu6nuTOIlsiAtnFitpvzT6u7urMi5Tq1sw15dQpmymBBG&s=10" alt="Foto Air Terjun Pancor Kopong">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Tempat makan & minuman</li><li>Toilet/Kamar mandi</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="air-terjun">
+                    <h2>Air Terjun Benang Stokel & Benang Kelambu</h2>
+                    <p>Kategori: Air Terjun</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Benang+Stokel+Benang+Kelambu+Lombok+Tengah" target="_blank">Lombok Tengah, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Air Terjun Benang Stokel dan Benang Kelambu merupakan dua air terjun yang berada dalam satu kawasan di kaki Gunung Rinjani. Benang Stokel memiliki aliran air yang jatuh seperti untaian benang, sedangkan Benang Kelambu memiliki aliran yang menyerupai tirai.</p>
+                    <p>Jam Buka: Buka setiap hari 07.30-17.00 WITA</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp 10.000,-/orang</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://www.pelago.com/img/products/ID-Indonesia/benang-kelambu-stokel-waterfall-tour/1025-0622_benang-kelambu-stokel-waterfall-tour-indonesia-pelago1.jpg" alt="Foto Air Terjun Benang Stokel & Benang Kelambu">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Tempat makan & minuman</li><li>Toilet/Kamar mandi</li><li>Mushola/tempat ibadah</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="gunung">
+                    <h2>Gunung Rinjani</h2>
+                    <p>Kategori: Gunung</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Gunung+Rinjani+Lombok" target="_blank">Lombok Timur, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Gunung Rinjani merupakan gunung berapi aktif dengan ketinggian sekitar 3.726 mdpl. Kawasan ini terkenal dengan pemandangan pegunungan, padang savana, serta Danau Segara Anak yang berada di dalam kaldera Rinjani.</p>
+                    <p>Jam Buka: Ada jadwal dan ketentuan yang berlaku</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp 50.000,-/orang untuk jalur Sembalun/Senaru/Torean (weekdays)</p>
+                    <p>Rp 75.000,-/orang untuk jalur Sembalun/Senaru/Torean (weekend)</p>
+                    <p>Rp 25.000,-/orang untuk jalur Sembalun/Senaru/Torean (rombongan pelajar/mahasiswa)</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://media.istockphoto.com/id/2203389929/id/foto/pemandangan-puncak-gunung-rinjani-yang-menghadap-ke-kaldera-dan-danau-kawah.jpg?s=612x612&w=0&k=20&c=TdYlp9-s1MYN4A4GIzMw51so_EE_9U5AChmgnJI9n60=" alt="Foto Gunung Rinjani">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Tempat istirahat</li><li>Area registrasi/basecamp</li><li>Pos pendakian</li><li>Area camping</li><li>Tempat makan & minuman</li><li>Toilet</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="gunung">
+                    <h2>Gunung Barujari</h2>
+                    <p>Kategori: Gunung</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Gunung+Barujari+Lombok" target="_blank">Lombok Timur, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Gunung Barujari dikenal sebagai “Anak Gunung Rinjani” yang berada di tengah kawasan Danau Segara Anak. Barujari merupakan gunung api aktif dan menjadi salah satu pemandangan khas dari kawasan Rinjani.</p>
+                    <p>Jam Buka: Mengikuti jadwal dan aturan pendakian Taman Nasional Gunung Rinjani</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp 50.000,-/orang (weekdays)</p>
+                    <p>Rp 75.000,-/orang (weekend)</p>
+                    <p>Rp 25.000,-/orang (rombongan pelajar/mahasiswa)</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/2/20/Gunung-baru-jari.jpg" alt="Foto Gunung Barujari">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Area perkemahan di sekitar Segara Anak</li><li>Toilet/Kamar mandi</li><li>Jalur pendakian resmi</li><li>Pos pendakian</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="gunung">
+                    <h2>Gunung Sangkareang</h2>
+                    <p>Kategori: Gunung</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Gunung+Sangkareang+Tetebatu+Lombok+Timur" target="_blank">Lombok Timur, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Gunung Sangkareang merupakan salah satu puncak di kawasan Taman Nasional Gunung Rinjani dengan ketinggian sekitar 3.200 mdpl. Dari puncaknya dapat terlihat Gunung Rinjani, kaldera, Danau Segara Anak, dan Gunung Barujari. Jalur pendakian dapat dimulai dari kawasan Tetebatu.</p>
+                    <p>Jam Buka: Mengikuti aturan dan kondisi jalur TNGR</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp 50.000,-/orang (weekdays)</p>
+                    <p>Rp 75.000,-/orang (weekend)</p>
+                    <p>Rp 25.000,-/orang (rombongan pelajar/mahasiswa)</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT8V51cGXzJXRexghAzkxewWDHz0ZOSFt1kXuYDqaG17nkM3TopKs6Mn24x&s=10" alt="Foto Gunung Sangkareang">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Jalur pendakian</li><li>Toilet</li><li>Pos/area istirahat</li><li>Area camping</li><li>Sumber air di sepanjang jalur</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="gunung">
+                    <h2>Gunung Kondo</h2>
+                    <p>Kategori: Gunung</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Gunung+Kondo+Sembalun+Lombok+Timur" target="_blank">Lombok Timur, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Gunung Kondo atau Bukit Kondo merupakan salah satu puncak dalam Sembalun Seven Summits. Dari puncaknya, pengunjung dapat melihat Gunung Rinjani, Savana Propok, dan pemandangan alam Lombok. Ketinggiannya sekitar 1.900 mdpl.</p>
+                    <p>Jam Buka: Mengikuti jadwal dan aturan pendakian</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp 15.000,-/orang (Menyesuaikan pengelola)</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLBaYFQ_-Wy3b66ybAdCNhQpJbSsxOYt-nhZryMY8jSaQ1pzL39FQFrHmK&s=10" alt="Foto Gunung Kondo">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Jalur pendakian</li><li>Toilet</li><li>Area camping</li><li>Area istirahat/campsite</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="danau">
+                    <h2>Danau Segara Anak</h2>
+                    <p>Kategori: Danau</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Danau+Segara+Anak+Lombok" target="_blank">Lombok Timur, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Danau Segara Anak merupakan danau kawah di kawasan Gunung Rinjani dengan air berwarna biru kehijauan. Di sekitar danau terdapat Gunung Barujari dan sumber air panas.</p>
+                    <p>Jam Buka: Mengikuti jadwal dan aturan pendakian TNGR</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp 50.000,-/orang (weekdays)</p>
+                    <p>Rp 75.000,-/orang (weekend)</p>
+                    <p>Rp 25.000,-/orang (rombongan pelajar/mahasiswa)</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRxAwcSd-2g47dLi6kRIxSWyAKebgEwquho3Gaa7zWIDOMZe0i2hiJ4sa8&s=10" alt="Foto Danau Segara Anak">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Area camping</li><li>Area istirahat</li><li>Jalur pendakian</li><li>Toilet</li><li>Sumber air</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="danau">
+                    <h2>Danau Biru Karang Sidemen</h2>
+                    <p>Kategori: Danau</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Danau+Biru+Karang+Sidemen+Lombok+Tengah" target="_blank">Lombok Tengah, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Danau Biru merupakan wisata alam dengan air berwarna biru kehijauan yang dikelilingi pepohonan rindang dan suasana hutan yang sejuk.</p>
+                    <p>Jam Buka: Buka setiap hari 08.00-17.00 WITA</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp 5.000,- s/d Rp 10.000,-/orang</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJRQ2rRiLjgYVGChKf8bIiLXNff1hEeCVgXHUEchc_Uw8NN6T_CbHhnbg&s=10" alt="Foto Danau Biru Karang Sidemen">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Tempat makan & minuman</li><li>Toilet</li><li>Gazebo</li><li>Area camping</li><li>Mushola/tempat ibadah</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="danau">
+                    <h2>Danau Gili Meno</h2>
+                    <p>Kategori: Danau</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Danau+Gili+Meno+Lombok+Utara" target="_blank">Lombok Utara, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Danau Gili Meno merupakan danau air tawar yang berada di tengah Pulau Gili Meno. Suasananya tenang dan dikelilingi pepohonan serta kawasan alami.</p>
+                    <p>Jam Buka: Buka setiap hari 24 jam</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp0 (Gratis berdasarkan portal pariwisata)</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://lepirate.com/wp-content/uploads/2025/08/Aerial-View-Gili-Meno-1280x720.jpg" alt="Foto Danau Gili Meno">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Tempat makan & minuman</li><li>Toilet</li><li>Area jalan kaki</li><li>Tempat istirahat</li><li>Spot foto</li>
+                    </ul>
+                </article>
+
+                <article class="danau">
+                    <h2>Telaga Biru Gunung Paok</h2>
+                    <p>Kategori: Danau</p>
+                    <p>Lokasi: <a href="https://www.google.com/maps/search/?api=1&query=Telaga+Biru+Gunung+Paok+Lombok+Timur" target="_blank">Lombok Timur, Nusa Tenggara Barat. (lihat di Google Maps)</a></p>
+                    <p>Deskripsi Wisata: Telaga Biru merupakan danau kecil dengan air jernih berwarna kebiruan yang berada di kawasan hutan TNGR. Suasananya sejuk dan tenang.</p>
+                    <p>Jam Buka: Buka setiap hari 24 Jam</p>
+                    <p>Tiket Masuk:</p>
+                    <p>Rp 10.000,-/orang</p>
+                    <p>Foto Wisata:</p>
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQTkJim5cXw6NJ8B5lJsvkWdo_HzJwL5VJDjk6vzdh21UNfEHZIoRr347l&s=10" alt="Foto Telaga Biru Gunung Paok">
+                    <p>Fasilitas Wisata yang Tersedia:</p>
+                    <ul>
+                        <li>Area parkir</li><li>Gazebo</li><li>Toilet</li><li>Area jalan kaki</li><li>Spot foto</li>
+                    </ul>
+                </article>
+            </div>
+        </section>
+
+        <!-- ===== MODAL DETAIL WISATA & BOOKING FLOW ===== -->
+        <div class="modal-backdrop" id="wisataModal">
+            <div class="modal-box">
+                <button class="modal-close" id="closeWisataModal" aria-label="Tutup">&times;</button>
+
+                <!-- VIEW 1: DETAIL WISATA -->
+                <div id="viewDetailWisata">
+                    <div class="detail-hero">
+                        <img id="detailImg" src="" alt="Foto Wisata">
+                        <span class="detail-badge" id="detailKategori"></span>
+                    </div>
+                    <div class="detail-body">
+                        <h2 id="detailNama"></h2>
+                        <p class="detail-lokasi">📍 <strong>Lokasi:</strong> <a id="detailMapLink" href="#" target="_blank"></a></p>
+                        <p class="detail-jam">🕒 <strong>Jam Buka:</strong> <span id="detailJam"></span></p>
+
+                        <div class="detail-box-section">
+                            <h4>📖 Deskripsi Wisata</h4>
+                            <p id="detailDeskripsi"></p>
+                        </div>
+
+                        <div class="detail-grid-2">
+                            <div class="detail-box-section">
+                                <h4>🎟️ Tiket Masuk</h4>
+                                <ul id="detailTiket" class="list-tiket"></ul>
+                            </div>
+                            <div class="detail-box-section">
+                                <h4>✨ Fasilitas Tersedia</h4>
+                                <div id="detailFasilitas" class="chips-fasilitas"></div>
+                            </div>
+                        </div>
+
+                        <div class="detail-actions">
+                            <button type="button" class="btn-action btn-booking" id="btnOpenBooking">🎟️ BOOKING NOW</button>
+                            <button type="button" class="btn-action btn-tanya" id="btnTanyaWisata">💬 TANYA WISATA</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- VIEW 2: FORM IDENTITAS & PEMBAYARAN -->
+                <div id="viewBookingForm" class="sembunyi">
+                    <div class="booking-header">
+                        <button type="button" class="btn-back" id="btnBackToDetail">&larr; Kembali ke Detail</button>
+                        <h3>Formulir Pemesanan Tiket Wisata</h3>
+                        <p id="bookingSubtitle"></p>
+                    </div>
+                    <form id="formBookingWisata" class="booking-form">
+                        <div class="form-section-title">1. Identitas Pemesan</div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Nama Lengkap *</label>
+                                <input type="text" id="bookNama" required placeholder="Contoh: Budi Santoso">
+                            </div>
+                            <div class="form-group">
+                                <label>Nomor WhatsApp / HP *</label>
+                                <input type="tel" id="bookHp" required placeholder="Contoh: 081234567890">
+                            </div>
+                            <div class="form-group">
+                                <label>Email *</label>
+                                <input type="email" id="bookEmail" required placeholder="nama@email.com">
+                            </div>
+                            <div class="form-group">
+                                <label>Tanggal Kunjungan *</label>
+                                <input type="date" id="bookTanggal" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Alamat Lengkap *</label>
+                            <input type="text" id="bookAlamat" required placeholder="Jl. Pemuda No. 10, Kota...">
+                        </div>
+
+                        <div class="form-section-title">2. Detail Kunjungan & Pembayaran</div>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label>Jumlah Pengunjung (Orang) *</label>
+                                <input type="number" id="bookJumlah" min="1" max="50" value="2" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Jenis Kendaraan</label>
+                                <select id="bookKendaraan">
+                                    <option value="0">Tanpa Kendaraan (Rp 0)</option>
+                                    <option value="5000" selected>Motor (Rp 5.000)</option>
+                                    <option value="10000">Mobil (Rp 10.000)</option>
+                                    <option value="20000">Bus Pariwisata (Rp 20.000)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Pilih Metode Pembayaran *</label>
+                            <div class="payment-options">
+                                <label class="pay-card">
+                                    <input type="radio" name="metodeBayar" value="QRIS Nusantara" checked>
+                                    <span>📱 QRIS (Instan)</span>
+                                </label>
+                                <label class="pay-card">
+                                    <input type="radio" name="metodeBayar" value="Transfer Bank (BCA / Mandiri / BRI)">
+                                    <span>🏦 Transfer Bank</span>
+                                </label>
+                                <label class="pay-card">
+                                    <input type="radio" name="metodeBayar" value="E-Wallet (GoPay / OVO / Dana)">
+                                    <span>💳 E-Wallet</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="ringkasan-harga">
+                            <div>Estimasi Total Pembayaran:</div>
+                            <strong id="bookTotalHarga">Rp 25.000</strong>
+                        </div>
+
+                        <button type="submit" class="btn-submit-booking">✅ Bayar Sekarang & Cetak Struk</button>
+                    </form>
+                </div>
+
+                <!-- VIEW 3: STRUK PEMBAYARAN RESMI -->
+                <div id="viewReceipt" class="sembunyi">
+                    <div class="receipt-card" id="printableReceipt">
+                        <div class="receipt-top">
+                            <div class="receipt-logo">🏝️ WISATA ALAM LOMBOK</div>
+                            <span class="receipt-status">LUNAS / PAID</span>
+                        </div>
+                        <p class="receipt-subtitle">E-Ticket & Struk Resmi Kunjungan Wisata</p>
+                        <hr class="receipt-divider">
+                        <div class="receipt-rows">
+                            <div class="r-row"><span>Kode Booking</span><strong id="strukKode"></strong></div>
+                            <div class="r-row"><span>Waktu Transaksi</span><span id="strukWaktu"></span></div>
+                            <div class="r-row"><span>Destinasi Wisata</span><strong id="strukWisata"></strong></div>
+                            <div class="r-row"><span>Nama Pemesan</span><span id="strukNama"></span></div>
+                            <div class="r-row"><span>No. WhatsApp</span><span id="strukHp"></span></div>
+                            <div class="r-row"><span>Alamat</span><span id="strukAlamat"></span></div>
+                            <div class="r-row"><span>Tanggal Kunjungan</span><strong id="strukTanggal"></strong></div>
+                            <div class="r-row"><span>Jumlah Pengunjung</span><span id="strukJumlah"></span></div>
+                            <div class="r-row"><span>Kendaraan</span><span id="strukKendaraan"></span></div>
+                            <div class="r-row"><span>Metode Pembayaran</span><span id="strukMetode"></span></div>
+                        </div>
+                        <hr class="receipt-divider">
+                        <div class="receipt-total">
+                            <span>TOTAL DIBAYAR</span>
+                            <strong id="strukTotal"></strong>
+                        </div>
+                        <div class="receipt-barcode">||| |||| || ||||| ||| |||| ||| ||||</div>
+                        <p class="receipt-note">Tunjukkan struk ini kepada petugas loket destinasi wisata.</p>
+                    </div>
+                    <div class="receipt-actions">
+                        <button type="button" class="btn-action btn-booking" onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
+                        <button type="button" class="btn-action btn-tanya" id="btnDoneReceipt">Selesai</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== MODAL LOGIN / BUAT AKUN (IN-MEMORY DB) ===== -->
+        <div class="modal-backdrop" id="authModal">
+            <div class="modal-box modal-auth-box">
+                <button class="modal-close" id="closeAuthModal">&times;</button>
+                <div class="auth-tabs">
+                    <button type="button" class="auth-tab aktif" id="tabLogin">Masuk (Login)</button>
+                    <button type="button" class="auth-tab" id="tabRegister">Buat Akun</button>
+                </div>
+
+                <!-- Form Login -->
+                <form id="formLogin" class="auth-form">
+                    <h3>Selamat Datang Kembali 👋</h3>
+                    <p class="auth-hint">Akun Demo Sementara:<br>Admin: <code>admin</code> / <code>admin123</code> | User: <code>user</code> / <code>user123</code></p>
+                    <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" id="loginUser" required placeholder="Masukkan username">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="loginPass" required placeholder="Masukkan password">
+                    </div>
+                    <p id="authMsg" class="auth-msg"></p>
+                    <button type="submit" class="btn-submit-booking">Masuk Sekarang</button>
+                </form>
+
+                <!-- Form Buat Akun -->
+                <form id="formRegister" class="auth-form sembunyi">
+                    <h3>Buat Akun Wisatawan ✨</h3>
+                    <p class="auth-hint">Disimpan di Database Sementara (In-Memory) selama sesi aktif.</p>
+                    <div class="form-group">
+                        <label>Nama Lengkap</label>
+                        <input type="text" id="regNama" required placeholder="Nama lengkap Anda">
+                    </div>
+                    <div class="form-group">
+                        <label>Username Baru</label>
+                        <input type="text" id="regUser" required placeholder="Buat username unik">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" id="regPass" required placeholder="Minimal 4 karakter">
+                    </div>
+                    <p id="regMsg" class="auth-msg"></p>
+                    <button type="submit" class="btn-submit-booking">Daftar & Langsung Login</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- ===== CHATBOT WIDGET: Lombok24jamSupport ===== -->
+        <div class="chatbot-wrapper" id="chatbotWrapper">
+            <button class="chatbot-toggle" id="chatbotToggle" type="button">
+                <span class="chat-icon">💬</span>
+                <span class="chat-text">Lombok24jamSupport</span>
+                <span class="online-dot"></span>
+            </button>
+
+            <div class="chatbot-window" id="chatbotWindow">
+                <div class="chatbot-header">
+                    <div>
+                        <strong>🤖 Lombok24jamSupport</strong>
+                        <span class="chat-status" id="chatStatus">Online 24 Jam · Siap Membantu</span>
+                    </div>
+                    <button type="button" class="chat-close" id="chatbotClose">&times;</button>
+                </div>
+
+                <div class="chatbot-messages" id="chatbotMessages"></div>
+
+                <!-- Template Chat untuk eksplorasi tanpa klik satu-satu -->
+                <div class="chatbot-templates" id="chatbotTemplates">
+                    <button type="button" data-prompt="Rekomendasi Pantai">🏖️ Pantai Terbaik</button>
+                    <button type="button" data-prompt="Rekomendasi Bukit">🌄 Spot Sunset & Bukit</button>
+                    <button type="button" data-prompt="Rekomendasi Air Terjun">💧 Air Terjun Asri</button>
+                    <button type="button" data-prompt="Info Pendakian Gunung Rinjani">🌋 Info Rinjani</button>
+                    <button type="button" data-prompt="Wisata Gratis & Murah">💸 Tiket Gratis/Murah</button>
+                    <button type="button" data-prompt="Cara Booking Tiket">🎟️ Cara Booking</button>
+                </div>
+
+                <form class="chatbot-input-area" id="chatbotForm">
+                    <input type="text" id="chatbotInput" placeholder="Tanya wisata Lombok di sini..." autocomplete="off">
+                    <button type="submit">Kirim</button>
+                </form>
+            </div>
+        </div>
+
+        <footer>
+            <p>Website Informasi dan Rekomendasi Wisata Alam di Lombok · Kelompok 1 · Sistem Informasi UNESA</p>
+        </footer>
+
+        <!-- Memanggil File JavaScript Eksternal -->
+        <script src="script.js"></script>
+    </body>
+
+    </html>
