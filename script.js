@@ -435,12 +435,12 @@ function jawabanLokalBot(pesan) {
     const cocokWisata = daftarWisataData.find(w => teks.includes(w.nama.toLowerCase()));
     if (cocokWisata) {
         return `✨ <strong>${cocokWisata.nama}</strong> (${cocokWisata.kategoriLabel})\n\n` +
-               `📍 <strong>Lokasi:</strong> ${cocokWisata.lokasiTeks}\n` +
-               `🕒 <strong>Jam Buka:</strong> ${cocokWisata.jamBuka}\n` +
-               `🎟️ <strong>Tiket:</strong> ${cocokWisata.tiketList.join(' | ')}\n` +
-               `📖 <strong>Info:</strong> ${cocokWisata.deskripsi}\n` +
-               `✅ <strong>Fasilitas:</strong> ${cocokWisata.fasilitas.join(', ')}.\n\n` +
-               `<em>Tip: Klik kartu ${cocokWisata.nama} lalu pilih BOOKING NOW untuk memesan tiket!</em>`;
+            `📍 <strong>Lokasi:</strong> ${cocokWisata.lokasiTeks}\n` +
+            `🕒 <strong>Jam Buka:</strong> ${cocokWisata.jamBuka}\n` +
+            `🎟️ <strong>Tiket:</strong> ${cocokWisata.tiketList.join(' | ')}\n` +
+            `📖 <strong>Info:</strong> ${cocokWisata.deskripsi}\n` +
+            `✅ <strong>Fasilitas:</strong> ${cocokWisata.fasilitas.join(', ')}.\n\n` +
+            `<em>Tip: Klik kartu ${cocokWisata.nama} lalu pilih BOOKING NOW untuk memesan tiket!</em>`;
     }
 
     if (teks.includes('pantai')) {

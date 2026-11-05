@@ -7,7 +7,7 @@ Mendukung:
 
 from datetime import datetime
 
-BOT_NAME = "Lombok24jamSupport"
+BOT_NAME = "Support"
 
 # Basis Pengetahuan (Knowledge Base) Destinasi Wisata Lombok
 KNOWLEDGE_BASE = {
