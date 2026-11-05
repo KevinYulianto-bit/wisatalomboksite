@@ -402,82 +402,89 @@
     // =====================================================================
 
     const chatbotToggle = document.getElementById('chatbotToggle');
-    const chatbotWindow = document.getElementById('chatbotWindow');
-    const chatbotClose = document.getElementById('chatbotClose');
-    const chatbotMessages = document.getElementById('chatbotMessages');
-    const chatbotForm = document.getElementById('chatbotForm');
-    const chatbotInput = document.getElementById('chatbotInput');
+const chatbotWindow = document.getElementById('chatbotWindow');
+const chatbotClose = document.getElementById('chatbotClose');
+const chatbotMessages = document.getElementById('chatbotMessages');
+const chatbotForm = document.getElementById('chatbotForm');
+const chatbotInput = document.getElementById('chatbotInput');
 
-    if (chatbotToggle && chatbotWindow && chatbotClose) {
-        chatbotToggle.addEventListener('click', () => chatbotWindow.classList.toggle('buka'));
-        chatbotClose.addEventListener('click', () => chatbotWindow.classList.remove('buka'));
-    }
+if (chatbotToggle && chatbotWindow && chatbotClose) {
+    chatbotToggle.addEventListener('click', () => chatbotWindow.classList.toggle('buka'));
+    chatbotClose.addEventListener('click', () => chatbotWindow.classList.remove('buka'));
+}
 
-    function tambahBubbleChat(teks, pengirim = 'bot') {
-        const div = document.createElement('div');
-        div.className = `chat-bubble ${pengirim}`;
-        div.innerHTML = teks.replace(/\n/g, '<br>');
-        chatbotMessages.appendChild(div);
-        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-        return div;
-    }
+function tambahBubbleChat(teks, pengirim = 'bot') {
+    const div = document.createElement('div');
+    div.className = `chat-bubble ${pengirim}`;
+    div.innerHTML = teks.replace(/\n/g, '<br>');
+    chatbotMessages.appendChild(div);
+    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    return div;
+}
 
-    // Sambutan Awal Chatbot
-    tambahBubbleChat(
-        `Halo! Selamat datang di <strong>Lombok24jamSupport</strong> 🏝️.\nSilakan tanyakan nama destinasi wisata, pantai, bukit, atau air terjun yang ingin kamu kunjungi, dan sistem akan langsung mengarahkannya untukmu!`
-    );
+tambahBubbleChat(
+    `Halo! Selamat datang di <strong>Lombok24jamSupport</strong> 🏝️.\nSaya asisten AI 24 jam Anda. Ceritakan suasana liburan, destinasi, atau budget yang Anda inginkan, kita diskusi bareng yuk!`
+);
 
-    // Fungsi Respon Lokal Cerdas (Bisa langsung klik kartu & auto-fokus)
-    function jawabanLokalBot(pesan) {
-        const teks = pesan.toLowerCase();
+function bukaWisataDariChat(idWisata) {
+    fokusKeKartuWisata(idWisata);
+    setTimeout(() => {
+        bukaModalDetail(idWisata);
+    }, 600);
+}
 
-        // Cek apakah mengetik nama wisata
-        const cocokWisata = daftarWisataData.find(w => teks.includes(w.nama.toLowerCase()));
-        if (cocokWisata) {
-            return `✨ <strong>${cocokWisata.nama}</strong> (${cocokWisata.kategoriLabel})<br>` +
-                `📍 <strong>Lokasi:</strong> ${cocokWisata.lokasiTeks}<br>` +
-                `🕒 <strong>Jam Buka:</strong> ${cocokWisata.jamBuka}<br>` +
-                `🎟️ <strong>Tiket:</strong> ${cocokWisata.tiketList.join(' | ')}<br>` +
-                `📖 <strong>Info:</strong> ${cocokWisata.deskripsi}<br><br>` +
-                `<button class="btn-chat-visit" onclick="fokusKeKartuWisata(${cocokWisata.id})" style="background:#ffa62b; color:#fff; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; font-weight:bold;">🔍 Lihat Kartu Wisata Ini &rarr;</button>`;
-        }
+async function kirimPesanKeBot(pesanUser) {
+    tambahBubbleChat(pesanUser, 'user');
+    const bubbleLoading = tambahBubbleChat('<em>⏳ Lombok24jamSupport sedang mengetik...</em>', 'bot');
 
-        if (teks.includes('pantai')) {
-            const list = daftarWisataData.filter(w => w.kategoriClass === 'pantai').map(w => `• <a href="#" onclick="fokusKeKartuWisata(${w.id}); return false;" style="color:#007bff; font-weight:bold;">${w.nama}</a>`).join('<br>');
-            return `🏖️ <strong>Daftar Pantai Terbaik di Lombok (Klik untuk lihat):</strong><br>${list}`;
-        }
-        if (teks.includes('bukit') || teks.includes('sunset')) {
-            const list = daftarWisataData.filter(w => w.kategoriClass === 'bukit').map(w => `• <a href="#" onclick="fokusKeKartuWisata(${w.id}); return false;" style="color:#007bff; font-weight:bold;">${w.nama}</a>`).join('<br>');
-            return `🌄 <strong>Daftar Bukit & Spot Panorama (Klik untuk lihat):</strong><br>${list}`;
-        }
-        if (teks.includes('air terjun')) {
-            const list = daftarWisataData.filter(w => w.kategoriClass === 'air-terjun').map(w => `• <a href="#" onclick="fokusKeKartuWisata(${w.id}); return false;" style="color:#007bff; font-weight:bold;">${w.nama}</a>`).join('<br>');
-            return `💧 <strong>Daftar Air Terjun Asri (Klik untuk lihat):</strong><br>${list}`;
-        }
+    try {
+        const katalogWisataUntukAI = daftarWisataData.map(w => 
+            `[ID:${w.id}] ${w.nama} | Kategori: ${w.kategoriLabel} | Lokasi: ${w.lokasiTeks} | Tiket: ${w.tiketList.join(', ')} | Deskripsi: ${w.deskripsi}`
+        ).join('\n');
 
-        return `Terima kasih telah menghubungi <strong>Lombok24jamSupport</strong>! 😊\nCoba ketik nama destinasi wisatanya secara spesifik (contoh: <em>Pantai Tanjung Aan, Bukit Merese, Air Terjun Sendang Gile</em>) agar langsung bisa diklik dan dikunjungi!`;
-    }
-
-    function kirimPesanKeBot(pesanUser) {
-        tambahBubbleChat(pesanUser, 'user');
-        const bubbleLoading = tambahBubbleChat('<em>⏳ Lombok24jamSupport sedang mengetik...</em>', 'bot');
-
-        setTimeout(() => {
-            const balasan = jawabanLokalBot(pesanUser);
-            bubbleLoading.innerHTML = balasan;
-            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-        }, 400);
-    }
-
-    if (chatbotForm && chatbotInput) {
-        chatbotForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const pesan = chatbotInput.value.trim();
-            if (!pesan) return;
-            chatbotInput.value = '';
-            kirimPesanKeBot(pesan);
+        const res = await fetch('/api/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                message: pesanUser,
+                katalog: katalogWisataUntukAI
+            })
         });
+
+        const data = await res.json();
+
+        if (res.ok && data.reply) {
+            bubbleLoading.innerHTML = data.reply.replace(/\n/g, '<br>');
+            if (data.auto_focus_id !== null && data.auto_focus_id !== undefined) {
+                fokusKeKartuWisata(data.auto_focus_id);
+            }
+            chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+            return;
+        } else {
+            bubbleLoading.innerHTML = `⚠️ Kendala sistem: ${data.error || 'Gagal terhubung ke AI'}`;
+            return;
+        }
+    } catch (err) {
+        console.error(err);
+        bubbleLoading.innerHTML = "Maaf, terjadi kendala jaringan saat menghubungi server AI.";
     }
+}
+
+if (chatbotForm && chatbotInput) {
+    chatbotForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const teks = chatbotInput.value.trim();
+        if (!teks) return;
+        chatbotInput.value = '';
+        kirimPesanKeBot(teks);
+    });
+}
+
+document.querySelectorAll('#chatbotTemplates button').forEach(btn => {
+    btn.addEventListener('click', () => {
+        kirimPesanKeBot(btn.dataset.prompt);
+    });
+});
 
     // 9. SLIDESHOW HERO & ANIMASI ANGKA
     const slide = document.querySelectorAll('.slide');
