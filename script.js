@@ -398,15 +398,25 @@
     });
 
     // =====================================================================
-    // ==== 8. CHATBOT INTERAKTIF & KLIK KARTU WISATA LANGSUNG          ====
-    // =====================================================================
+// ==== 8. CHATBOT AI GEMINI + LIVE CHAT 2 ARAH CS VIA TELEGRAM     ====
+// =====================================================================
 
-    const chatbotToggle = document.getElementById('chatbotToggle');
+const chatbotToggle = document.getElementById('chatbotToggle');
 const chatbotWindow = document.getElementById('chatbotWindow');
 const chatbotClose = document.getElementById('chatbotClose');
 const chatbotMessages = document.getElementById('chatbotMessages');
 const chatbotForm = document.getElementById('chatbotForm');
 const chatbotInput = document.getElementById('chatbotInput');
+
+// State untuk sesi Live CS Manusia
+let modeLiveCS = false;
+let timerPollingCS = null;
+let lastTelegramMsgId = 0;
+let sessionIdCS = localStorage.getItem('lombok_cs_session');
+if (!sessionIdCS) {
+    sessionIdCS = 'CS' + Math.floor(10000 + Math.random() * 90000);
+    localStorage.setItem('lombok_cs_session', sessionIdCS);
+}
 
 if (chatbotToggle && chatbotWindow && chatbotClose) {
     chatbotToggle.addEventListener('click', () => chatbotWindow.classList.toggle('buka'));
@@ -423,7 +433,7 @@ function tambahBubbleChat(teks, pengirim = 'bot') {
 }
 
 tambahBubbleChat(
-    `Halo! Selamat datang di <strong>Lombok24jamSupport</strong> 🏝️.\nSaya asisten AI 24 jam Anda. Ceritakan suasana liburan, destinasi, atau budget yang Anda inginkan, kita diskusi bareng yuk!`
+    `Halo! Selamat datang di <strong>Lombok24jamSupport</strong> 🏝️.\nSaya asisten virtual Anda. Silakan tanya seputar wisata Lombok, atau ketik <strong>"CS" / "Komplain"</strong> jika butuh terhubung langsung dengan Admin CS Manusia di ruang chat ini!`
 );
 
 function bukaWisataDariChat(idWisata) {
@@ -433,8 +443,101 @@ function bukaWisataDariChat(idWisata) {
     }, 600);
 }
 
+// Deteksi apakah user sedang komplain atau mengalami kendala
+function cekButuhCSManusia(pesan) {
+    const teks = pesan.toLowerCase();
+    const kataKunciMasalah = [
+        'kendala', 'komplain', 'masalah', 'gagal', 'error', 'eror',
+        'bayar', 'pembayaran', 'refund', 'uang kembali', 'struk',
+        'tiket tidak', 'belum masuk', 'cs', 'customer service',
+        'admin', 'manusia', 'orang asli', 'bantuan', 'tolong'
+    ];
+    return kataKunciMasalah.some(kata => teks.includes(kata));
+}
+
+// Mengaktifkan Mode Live Chat CS Manusia & Memulai Pengecekan Balasan Telegram
+function aktifkanModeLiveCS(pesanAwalUser = '') {
+    if (!modeLiveCS) {
+        modeLiveCS = true;
+        tambahBubbleChat(
+            `🔔 <strong>Mode Live CS Aktif (ID: #${sessionIdCS})</strong><br>` +
+            `Anda kini terhubung langsung dengan <strong>Customer Service Manusia</strong> kami. Pesan Anda telah diteruskan ke HP Admin, mohon tunggu balasan di ruang chat ini.<br>` +
+            `<button onclick="matikanModeLiveCS()" style="margin-top:8px; background:#e74c3c; color:#fff; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; font-size:0.8rem;">❌ Akhiri Sesi CS & Kembali ke AI</button>`,
+            'bot'
+        );
+
+        // Cek balasan dari Telegram setiap 3 detik
+        if (timerPollingCS) clearInterval(timerPollingCS);
+        timerPollingCS = setInterval(cekBalasanDariTelegram, 3000);
+    }
+
+    if (pesanAwalUser) {
+        kirimPesanKeTelegram(pesanAwalUser);
+    }
+}
+
+function matikanModeLiveCS() {
+    modeLiveCS = false;
+    if (timerPollingCS) clearInterval(timerPollingCS);
+    tambahBubbleChat(`✅ Sesi dengan CS Manusia telah diakhiri. Anda kembali terhubung dengan Asisten AI Lombok24jamSupport.`, 'bot');
+}
+
+async function kirimPesanKeTelegram(pesanUser) {
+    const namaUser = currentUser ? currentUser.nama : 'Pengunjung Web';
+    try {
+        const res = await fetch('/api/cs-telegram', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                sessionId: sessionIdCS,
+                nama: namaUser,
+                message: pesanUser
+            })
+        });
+        if (!res.ok) {
+            tambahBubbleChat(`⚠️ Gagal meneruskan pesan ke Telegram CS. Pastikan token sudah diatur.`, 'bot');
+        }
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+async function cekBalasanDariTelegram() {
+    if (!modeLiveCS) return;
+    try {
+        const res = await fetch(`/api/cs-telegram?sessionId=${sessionIdCS}&after=${lastTelegramMsgId}`);
+        if (!res.ok) return;
+        const data = await res.json();
+
+        if (data.replies && data.replies.length > 0) {
+            data.replies.forEach(item => {
+                if (item.id > lastTelegramMsgId) {
+                    lastTelegramMsgId = item.id;
+                    tambahBubbleChat(`👨‍💻 <strong>Admin CS:</strong><br>${item.text}`, 'bot');
+                }
+            });
+        }
+    } catch (err) {
+        console.error(err);
+    }
+}
+
 async function kirimPesanKeBot(pesanUser) {
     tambahBubbleChat(pesanUser, 'user');
+
+    // 1. Jika sedang dalam Mode Live CS, langsung kirim ke Telegram Admin
+    if (modeLiveCS) {
+        await kirimPesanKeTelegram(pesanUser);
+        return;
+    }
+
+    // 2. Jika terdeteksi komplain/kendala, otomatis alihkan ke Mode Live CS
+    if (cekButuhCSManusia(pesanUser)) {
+        aktifkanModeLiveCS(pesanUser);
+        return;
+    }
+
+    // 3. Jika pertanyaan wisata normal, dijawab oleh AI Gemini
     const bubbleLoading = tambahBubbleChat('<em>⏳ Lombok24jamSupport sedang mengetik...</em>', 'bot');
 
     try {
@@ -461,12 +564,11 @@ async function kirimPesanKeBot(pesanUser) {
             chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
             return;
         } else {
-            bubbleLoading.innerHTML = `⚠️ Kendala sistem: ${data.error || 'Gagal terhubung ke AI'}`;
-            return;
+            bubbleLoading.innerHTML = `⚠️ Kendala sistem AI. Ketik <strong>"CS"</strong> untuk berbicara langsung dengan Admin kami.`;
         }
     } catch (err) {
         console.error(err);
-        bubbleLoading.innerHTML = "Maaf, terjadi kendala jaringan saat menghubungi server AI.";
+        bubbleLoading.innerHTML = `Maaf, terjadi kendala jaringan. Ketik <strong>"CS"</strong> untuk terhubung dengan Admin manusia.`;
     }
 }
 
