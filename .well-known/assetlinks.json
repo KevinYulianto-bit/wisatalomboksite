@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.jababyvintridhisbussines.www.twa",
+        "sha256_cert_fingerprints": ["39:5D:29:04:C1:76:ED:FA:2E:40:40:16:72:5A:78:09:31:FE:2D:2E:42:7E:44:AE:6E:11:30:E2:59:59:E5:C1"]
+      }
+    }]
