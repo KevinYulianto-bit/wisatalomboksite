@@ -1,403 +1,404 @@
-    /* =====================================================================
-    SCRIPT.JS — Full Stack Logic: Data Engine, Search, Auth, Booking & Bot
-    ===================================================================== */
+/* =====================================================================
+   SCRIPT.JS — Full Stack Logic: Data Engine, Search, Auth, Booking & Bot
+   ===================================================================== */
 
-    // 1. PARSING DATA WISATA DARI HTML KE ARRAY OBJECT
-    const rawArticles = document.querySelectorAll('#raw-wisata-data article');
-    const daftarWisataData = [];
+// 1. PARSING DATA WISATA DARI HTML KE ARRAY OBJECT
+const rawArticles = document.querySelectorAll('#raw-wisata-data article');
+const daftarWisataData = [];
 
-    rawArticles.forEach((art, index) => {
-        const nama = art.querySelector('h2')?.textContent.trim() || '';
-        const kategoriClass = art.className.trim();
-        const imgEl = art.querySelector('img');
-        const foto = imgEl ? imgEl.getAttribute('src') : '';
-        const mapAnchor = art.querySelector('a');
-        const lokasiTeks = mapAnchor ? mapAnchor.textContent.trim() : 'Lombok, Nusa Tenggara Barat';
-        const lokasiUrl = mapAnchor ? mapAnchor.getAttribute('href').replace(/^- /, '').trim() : '#';
+rawArticles.forEach((art, index) => {
+    const nama = art.querySelector('h2')?.textContent.trim() || '';
+    const kategoriClass = art.className.trim();
+    const imgEl = art.querySelector('img');
+    const foto = imgEl ? imgEl.getAttribute('src') : '';
+    const mapAnchor = art.querySelector('a');
+    const lokasiTeks = mapAnchor ? mapAnchor.textContent.trim() : 'Lombok, Nusa Tenggara Barat';
+    const lokasiUrl = mapAnchor ? mapAnchor.getAttribute('href').replace(/^- /, '').trim() : '#';
 
-        let kategoriLabel = 'Wisata';
-        let deskripsi = '';
-        let jamBuka = 'Buka setiap hari 24 Jam';
-        const tiketList = [];
-        let sedangBacaTiket = false;
+    let kategoriLabel = 'Wisata';
+    let deskripsi = '';
+    let jamBuka = 'Buka setiap hari 24 Jam';
+    const tiketList = [];
+    let sedangBacaTiket = false;
 
-        art.querySelectorAll('p').forEach((p) => {
-            const teks = p.textContent.trim();
-            if (teks.startsWith('Kategori:')) {
-                kategoriLabel = teks.replace('Kategori:', '').trim();
-                sedangBacaTiket = false;
-            } else if (teks.startsWith('Deskripsi Wisata:')) {
-                deskripsi = teks.replace('Deskripsi Wisata:', '').replace(/^- /, '').trim();
-                sedangBacaTiket = false;
-            } else if (teks.startsWith('Jam Buka:')) {
-                jamBuka = teks.replace('Jam Buka:', '').trim();
-                sedangBacaTiket = false;
-            } else if (teks.startsWith('Tiket Masuk')) {
-                sedangBacaTiket = true;
-            } else if (teks.startsWith('Foto Wisata') || teks.startsWith('Fasilitas Wisata')) {
-                sedangBacaTiket = false;
-            } else if (sedangBacaTiket && teks.length > 0) {
-                tiketList.push(teks);
-            }
-        });
-
-        const fasilitas = Array.from(art.querySelectorAll('ul li')).map(li => li.textContent.trim());
-
-        let hargaDasar = 10000;
-        const gabungTiket = tiketList.join(' ');
-        const matchHarga = gabungTiket.match(/Rp\s?([\d.]+)/i);
-        if (matchHarga && matchHarga[1]) {
-            hargaDasar = parseInt(matchHarga[1].replace(/\./g, ''), 10) || 0;
+    art.querySelectorAll('p').forEach((p) => {
+        const teks = p.textContent.trim();
+        if (teks.startsWith('Kategori:')) {
+            kategoriLabel = teks.replace('Kategori:', '').trim();
+            sedangBacaTiket = false;
+        } else if (teks.startsWith('Deskripsi Wisata:')) {
+            deskripsi = teks.replace('Deskripsi Wisata:', '').replace(/^- /, '').trim();
+            sedangBacaTiket = false;
+        } else if (teks.startsWith('Jam Buka:')) {
+            jamBuka = teks.replace('Jam Buka:', '').trim();
+            sedangBacaTiket = false;
+        } else if (teks.startsWith('Tiket Masuk')) {
+            sedangBacaTiket = true;
+        } else if (teks.startsWith('Foto Wisata') || teks.startsWith('Fasilitas Wisata')) {
+            sedangBacaTiket = false;
+        } else if (sedangBacaTiket && teks.length > 0) {
+            tiketList.push(teks);
         }
-
-        daftarWisataData.push({
-            id: index,
-            nama,
-            kategoriClass,
-            kategoriLabel,
-            lokasiTeks,
-            lokasiUrl,
-            deskripsi,
-            jamBuka,
-            tiketList: tiketList.length ? tiketList : ['Rp 10.000,-/orang'],
-            hargaDasar,
-            foto,
-            fasilitas
-        });
     });
 
-    // 2. RENDER KARTU WISATA CLEAN DESIGN
-    const containerClean = document.getElementById('daftarClean');
-    const infoJumlah = document.getElementById('jumlah');
-    const infoKosong = document.getElementById('kosong');
-    let kategoriAktif = 'semua';
-    let kataKunciAktif = '';
+    const fasilitas = Array.from(art.querySelectorAll('ul li')).map(li => li.textContent.trim());
 
-    function renderKartuWisata() {
-        containerClean.innerHTML = '';
-        const hasil = daftarWisataData.filter((item) => {
-            const cocokKat = kategoriAktif === 'semua' || item.kategoriClass === kategoriAktif;
-            const cocokKata = item.nama.toLowerCase().includes(kataKunciAktif.toLowerCase());
-            return cocokKat && cocokKata;
-        });
+    let hargaDasar = 10000;
+    const gabungTiket = tiketList.join(' ');
+    const matchHarga = gabungTiket.match(/Rp\s?([\d.]+)/i);
+    if (matchHarga && matchHarga[1]) {
+        hargaDasar = parseInt(matchHarga[1].replace(/\./g, ''), 10) || 0;
+    }
 
-        infoJumlah.textContent = `Menampilkan ${hasil.length} destinasi wisata terbaik`;
-        infoKosong.style.display = hasil.length === 0 ? 'block' : 'none';
+    daftarWisataData.push({
+        id: index,
+        nama,
+        kategoriClass,
+        kategoriLabel,
+        lokasiTeks,
+        lokasiUrl,
+        deskripsi,
+        jamBuka,
+        tiketList: tiketList.length ? tiketList : ['Rp 10.000,-/orang'],
+        hargaDasar,
+        foto,
+        fasilitas
+    });
+});
 
-        hasil.forEach((w) => {
-            const card = document.createElement('div');
-            card.className = 'clean-card';
-            card.id = `wisata-card-${w.id}`;
-            card.innerHTML = `
-                <img src="${w.foto}" alt="${w.nama}" loading="lazy">
-                <span class="clean-badge">${w.kategoriLabel}</span>
-                <div class="clean-card-gradient">
-                    <h3>${w.nama}</h3>
-                    <div class="visit-now-overlay">VISIT NOW &rarr;</div>
+// 2. RENDER KARTU WISATA CLEAN DESIGN (Foto + Nama + VISIT NOW)
+const containerClean = document.getElementById('daftarClean');
+const infoJumlah = document.getElementById('jumlah');
+const infoKosong = document.getElementById('kosong');
+let kategoriAktif = 'semua';
+let kataKunciAktif = '';
+
+function renderKartuWisata() {
+    containerClean.innerHTML = '';
+    const hasil = daftarWisataData.filter((item) => {
+        const cocokKat = kategoriAktif === 'semua' || item.kategoriClass === kategoriAktif;
+        const cocokKata = item.nama.toLowerCase().includes(kataKunciAktif.toLowerCase());
+        return cocokKat && cocokKata;
+    });
+
+    infoJumlah.textContent = `Menampilkan ${hasil.length} destinasi wisata terbaik`;
+    infoKosong.style.display = hasil.length === 0 ? 'block' : 'none';
+
+    hasil.forEach((w) => {
+        const card = document.createElement('div');
+        card.className = 'clean-card';
+        card.id = `wisata-card-${w.id}`;
+        card.innerHTML = `
+            <img src="${w.foto}" alt="${w.nama}" loading="lazy">
+            <span class="clean-badge">${w.kategoriLabel}</span>
+            <div class="clean-card-gradient">
+                <h3>${w.nama}</h3>
+                <div class="visit-now-overlay">VISIT NOW &rarr;</div>
+            </div>
+        `;
+        card.addEventListener('click', () => bukaModalDetail(w.id));
+        containerClean.appendChild(card);
+    });
+}
+renderKartuWisata();
+
+// 3. FILTER KATEGORI (Navbar Dropdown, Filter Chips & Kartu Tentang)
+function setKategoriFilter(kat) {
+    kategoriAktif = kat;
+    kataKunciAktif = '';
+    document.querySelectorAll('.filter-chip').forEach(btn => {
+        btn.classList.toggle('aktif', btn.dataset.kat === kat);
+    });
+    renderKartuWisata();
+}
+
+document.querySelectorAll('.filter-chip').forEach(btn => {
+    btn.addEventListener('click', () => setKategoriFilter(btn.dataset.kat));
+});
+
+document.querySelectorAll('.navbar a[data-kat]').forEach(link => {
+    link.addEventListener('click', () => {
+        setKategoriFilter(link.dataset.kat);
+        document.getElementById('dropdown').classList.remove('buka');
+    });
+});
+
+document.querySelectorAll('.kategori-info li[data-filter]').forEach(li => {
+    li.addEventListener('click', () => {
+        setKategoriFilter(li.dataset.filter);
+        document.getElementById('wisata').scrollIntoView({ behavior: 'smooth' });
+    });
+});
+
+const dropdown = document.getElementById('dropdown');
+const tombolDropdown = document.getElementById('dropdownTombol');
+tombolDropdown.addEventListener('click', (e) => {
+    e.stopPropagation();
+    dropdown.classList.toggle('buka');
+});
+document.addEventListener('click', () => dropdown.classList.remove('buka'));
+
+// 4. SEARCH ENGINE NAVBAR KANAN + AUTOCOMPLETE + EFEK HIGHLIGHT KHUSUS
+const navSearchInput = document.getElementById('navSearchInput');
+const searchSuggestions = document.getElementById('searchSuggestions');
+
+navSearchInput.addEventListener('input', () => {
+    const q = navSearchInput.value.trim().toLowerCase();
+    searchSuggestions.innerHTML = '';
+
+    if (!q) {
+        searchSuggestions.classList.remove('tampil');
+        kataKunciAktif = '';
+        renderKartuWisata();
+        return;
+    }
+
+    const cocok = daftarWisataData.filter(w =>
+        w.nama.toLowerCase().includes(q) || w.kategoriLabel.toLowerCase().includes(q)
+    );
+
+    if (cocok.length > 0) {
+        cocok.slice(0, 7).forEach(w => {
+            const div = document.createElement('div');
+            div.className = 'sug-item';
+            div.innerHTML = `
+                <img src="${w.foto}" alt="${w.nama}">
+                <div class="sug-info">
+                    <strong>${w.nama}</strong>
+                    <span>${w.kategoriLabel} · Klik untuk menuju wisata</span>
                 </div>
             `;
-            card.addEventListener('click', () => bukaModalDetail(w.id));
-            containerClean.appendChild(card);
+            div.addEventListener('click', () => {
+                searchSuggestions.classList.remove('tampil');
+                navSearchInput.value = w.nama;
+                fokusKeKartuWisata(w.id);
+            });
+            searchSuggestions.appendChild(div);
         });
+        searchSuggestions.classList.add('tampil');
+    } else {
+        searchSuggestions.innerHTML = `<div class="sug-item"><div class="sug-info"><strong>Tidak ditemukan</strong><span>Coba kata kunci lain</span></div></div>`;
+        searchSuggestions.classList.add('tampil');
     }
+});
+
+function fokusKeKartuWisata(id) {
+    kategoriAktif = 'semua';
+    kataKunciAktif = '';
     renderKartuWisata();
 
-    // 3. FILTER KATEGORI
-    function setKategoriFilter(kat) {
-        kategoriAktif = kat;
-        kataKunciAktif = '';
-        document.querySelectorAll('.filter-chip').forEach(btn => {
-            btn.classList.toggle('aktif', btn.dataset.kat === kat);
-        });
-        renderKartuWisata();
+    const targetCard = document.getElementById(`wisata-card-${id}`);
+    if (targetCard) {
+        targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        targetCard.classList.add('highlight-search', 'terpilih');
+        setTimeout(() => {
+            targetCard.classList.remove('highlight-search');
+        }, 4200);
     }
+}
 
-    document.querySelectorAll('.filter-chip').forEach(btn => {
-        btn.addEventListener('click', () => setKategoriFilter(btn.dataset.kat));
-    });
-
-    document.querySelectorAll('.navbar a[data-kat]').forEach(link => {
-        link.addEventListener('click', () => {
-            setKategoriFilter(link.dataset.kat);
-            document.getElementById('dropdown').classList.remove('buka');
-        });
-    });
-
-    document.querySelectorAll('.kategori-info li[data-filter]').forEach(li => {
-        li.addEventListener('click', () => {
-            setKategoriFilter(li.dataset.filter);
-            document.getElementById('wisata').scrollIntoView({ behavior: 'smooth' });
-        });
-    });
-
-    const dropdown = document.getElementById('dropdown');
-    const tombolDropdown = document.getElementById('dropdownTombol');
-    tombolDropdown.addEventListener('click', (e) => {
-        e.stopPropagation();
-        dropdown.classList.toggle('buka');
-    });
-    document.addEventListener('click', () => dropdown.classList.remove('buka'));
-
-    // 4. SEARCH ENGINE NAVBAR
-    const navSearchInput = document.getElementById('navSearchInput');
-    const searchSuggestions = document.getElementById('searchSuggestions');
-
-    navSearchInput.addEventListener('input', () => {
-        const q = navSearchInput.value.trim().toLowerCase();
-        searchSuggestions.innerHTML = '';
-
-        if (!q) {
-            searchSuggestions.classList.remove('tampil');
-            kataKunciAktif = '';
-            renderKartuWisata();
-            return;
-        }
-
-        const cocok = daftarWisataData.filter(w =>
-            w.nama.toLowerCase().includes(q) || w.kategoriLabel.toLowerCase().includes(q)
-        );
-
-        if (cocok.length > 0) {
-            cocok.slice(0, 7).forEach(w => {
-                const div = document.createElement('div');
-                div.className = 'sug-item';
-                div.innerHTML = `
-                    <img src="${w.foto}" alt="${w.nama}">
-                    <div class="sug-info">
-                        <strong>${w.nama}</strong>
-                        <span>${w.kategoriLabel} · Klik untuk menuju wisata</span>
-                    </div>
-                `;
-                div.addEventListener('click', () => {
-                    searchSuggestions.classList.remove('tampil');
-                    navSearchInput.value = w.nama;
-                    fokusKeKartuWisata(w.id);
-                });
-                searchSuggestions.appendChild(div);
-            });
-            searchSuggestions.classList.add('tampil');
-        } else {
-            searchSuggestions.innerHTML = `<div class="sug-item"><div class="sug-info"><strong>Tidak ditemukan</strong><span>Coba kata kunci lain</span></div></div>`;
-            searchSuggestions.classList.add('tampil');
-        }
-    });
-
-    function fokusKeKartuWisata(id) {
-        kategoriAktif = 'semua';
-        kataKunciAktif = '';
-        renderKartuWisata();
-
-        const targetCard = document.getElementById(`wisata-card-${id}`);
-        if (targetCard) {
-            targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            targetCard.classList.add('highlight-search', 'terpilih');
-            setTimeout(() => {
-                targetCard.classList.remove('highlight-search');
-            }, 4200);
-        }
+document.addEventListener('click', (e) => {
+    if (!document.getElementById('navSearchBox').contains(e.target)) {
+        searchSuggestions.classList.remove('tampil');
     }
+});
 
-    document.addEventListener('click', (e) => {
-        if (!document.getElementById('navSearchBox').contains(e.target)) {
-            searchSuggestions.classList.remove('tampil');
-        }
+// 5. MODAL DETAIL WISATA, BOOKING NOW & CETAK STRUK
+const wisataModal = document.getElementById('wisataModal');
+const viewDetailWisata = document.getElementById('viewDetailWisata');
+const viewBookingForm = document.getElementById('viewBookingForm');
+const viewReceipt = document.getElementById('viewReceipt');
+let wisataTerpilih = null;
+
+function bukaModalDetail(id) {
+    wisataTerpilih = daftarWisataData.find(w => w.id === id);
+    if (!wisataTerpilih) return;
+
+    document.getElementById('detailImg').src = wisataTerpilih.foto;
+    document.getElementById('detailKategori').textContent = `Kategori: ${wisataTerpilih.kategoriLabel}`;
+    document.getElementById('detailNama').textContent = wisataTerpilih.nama;
+    const mapLink = document.getElementById('detailMapLink');
+    mapLink.textContent = wisataTerpilih.lokasiTeks;
+    mapLink.href = wisataTerpilih.lokasiUrl;
+    document.getElementById('detailJam').textContent = wisataTerpilih.jamBuka;
+    document.getElementById('detailDeskripsi').textContent = wisataTerpilih.deskripsi;
+
+    const ulTiket = document.getElementById('detailTiket');
+    ulTiket.innerHTML = '';
+    wisataTerpilih.tiketList.forEach(t => {
+        const li = document.createElement('li');
+        li.textContent = t;
+        ulTiket.appendChild(li);
     });
 
-    // 5. MODAL DETAIL WISATA & BOOKING
-    const wisataModal = document.getElementById('wisataModal');
-    const viewDetailWisata = document.getElementById('viewDetailWisata');
-    const viewBookingForm = document.getElementById('viewBookingForm');
-    const viewReceipt = document.getElementById('viewReceipt');
-    let wisataTerpilih = null;
+    const divFas = document.getElementById('detailFasilitas');
+    divFas.innerHTML = '';
+    wisataTerpilih.fasilitas.forEach(f => {
+        const span = document.createElement('span');
+        span.textContent = f;
+        divFas.appendChild(span);
+    });
 
-    function bukaModalDetail(id) {
-        wisataTerpilih = daftarWisataData.find(w => w.id === id);
-        if (!wisataTerpilih) return;
+    viewDetailWisata.classList.remove('sembunyi');
+    viewBookingForm.classList.add('sembunyi');
+    viewReceipt.classList.add('sembunyi');
+    wisataModal.classList.add('buka');
+}
 
-        document.getElementById('detailImg').src = wisataTerpilih.foto;
-        document.getElementById('detailKategori').textContent = `Kategori: ${wisataTerpilih.kategoriLabel}`;
-        document.getElementById('detailNama').textContent = wisataTerpilih.nama;
-        const mapLink = document.getElementById('detailMapLink');
-        mapLink.textContent = wisataTerpilih.lokasiTeks;
-        mapLink.href = wisataTerpilih.lokasiUrl;
-        document.getElementById('detailJam').textContent = wisataTerpilih.jamBuka;
-        document.getElementById('detailDeskripsi').textContent = wisataTerpilih.deskripsi;
+document.getElementById('closeWisataModal').addEventListener('click', () => {
+    wisataModal.classList.remove('buka');
+});
 
-        const ulTiket = document.getElementById('detailTiket');
-        ulTiket.innerHTML = '';
-        wisataTerpilih.tiketList.forEach(t => {
-            const li = document.createElement('li');
-            li.textContent = t;
-            ulTiket.appendChild(li);
-        });
+const bookJumlah = document.getElementById('bookJumlah');
+const bookKendaraan = document.getElementById('bookKendaraan');
+const bookTotalHarga = document.getElementById('bookTotalHarga');
 
-        const divFas = document.getElementById('detailFasilitas');
-        divFas.innerHTML = '';
-        wisataTerpilih.fasilitas.forEach(f => {
-            const span = document.createElement('span');
-            span.textContent = f;
-            divFas.appendChild(span);
-        });
+function hitungTotalBooking() {
+    if (!wisataTerpilih) return 0;
+    const jml = parseInt(bookJumlah.value, 10) || 1;
+    const biayaKendaraan = parseInt(bookKendaraan.value, 10) || 0;
+    const total = (wisataTerpilih.hargaDasar * jml) + biayaKendaraan;
+    bookTotalHarga.textContent = `Rp ${total.toLocaleString('id-ID')}`;
+    return total;
+}
 
-        viewDetailWisata.classList.remove('sembunyi');
-        viewBookingForm.classList.add('sembunyi');
-        viewReceipt.classList.add('sembunyi');
-        wisataModal.classList.add('buka');
+bookJumlah.addEventListener('input', hitungTotalBooking);
+bookKendaraan.addEventListener('change', hitungTotalBooking);
+
+document.getElementById('btnOpenBooking').addEventListener('click', () => {
+    viewDetailWisata.classList.add('sembunyi');
+    viewBookingForm.classList.remove('sembunyi');
+    document.getElementById('bookingSubtitle').textContent = `Destinasi: ${wisataTerpilih.nama}`;
+    document.getElementById('bookTanggal').valueAsDate = new Date();
+    if (currentUser) {
+        document.getElementById('bookNama').value = currentUser.nama;
     }
+    hitungTotalBooking();
+});
 
-    document.getElementById('closeWisataModal').addEventListener('click', () => {
-        wisataModal.classList.remove('buka');
-    });
+document.getElementById('btnBackToDetail').addEventListener('click', () => {
+    viewBookingForm.classList.add('sembunyi');
+    viewDetailWisata.classList.remove('sembunyi');
+});
 
-    const bookJumlah = document.getElementById('bookJumlah');
-    const bookKendaraan = document.getElementById('bookKendaraan');
-    const bookTotalHarga = document.getElementById('bookTotalHarga');
+document.getElementById('formBookingWisata').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const total = hitungTotalBooking();
+    const kode = 'LMB-' + Math.floor(100000 + Math.random() * 900000);
+    const metode = document.querySelector('input[name="metodeBayar"]:checked').value;
+    const opsiKendaraan = bookKendaraan.options[bookKendaraan.selectedIndex].text;
 
-    function hitungTotalBooking() {
-        if (!wisataTerpilih) return 0;
-        const jml = parseInt(bookJumlah.value, 10) || 1;
-        const biayaKendaraan = parseInt(bookKendaraan.value, 10) || 0;
-        const total = (wisataTerpilih.hargaDasar * jml) + biayaKendaraan;
-        bookTotalHarga.textContent = `Rp ${total.toLocaleString('id-ID')}`;
-        return total;
-    }
+    document.getElementById('strukKode').textContent = kode;
+    document.getElementById('strukWaktu').textContent = new Date().toLocaleString('id-ID');
+    document.getElementById('strukWisata').textContent = wisataTerpilih.nama;
+    document.getElementById('strukNama').textContent = document.getElementById('bookNama').value;
+    document.getElementById('strukHp').textContent = document.getElementById('bookHp').value;
+    document.getElementById('strukAlamat').textContent = document.getElementById('bookAlamat').value;
+    document.getElementById('strukTanggal').textContent = document.getElementById('bookTanggal').value;
+    document.getElementById('strukJumlah').textContent = `${bookJumlah.value} Orang`;
+    document.getElementById('strukKendaraan').textContent = opsiKendaraan;
+    document.getElementById('strukMetode').textContent = metode;
+    document.getElementById('strukTotal').textContent = `Rp ${total.toLocaleString('id-ID')}`;
 
-    bookJumlah.addEventListener('input', hitungTotalBooking);
-    bookKendaraan.addEventListener('change', hitungTotalBooking);
+    viewBookingForm.classList.add('sembunyi');
+    viewReceipt.classList.remove('sembunyi');
+});
 
-    document.getElementById('btnOpenBooking').addEventListener('click', () => {
-        viewDetailWisata.classList.add('sembunyi');
-        viewBookingForm.classList.remove('sembunyi');
-        document.getElementById('bookingSubtitle').textContent = `Destinasi: ${wisataTerpilih.nama}`;
-        document.getElementById('bookTanggal').valueAsDate = new Date();
-        if (currentUser) {
-            document.getElementById('bookNama').value = currentUser.nama;
-        }
-        hitungTotalBooking();
-    });
+document.getElementById('btnDoneReceipt').addEventListener('click', () => {
+    wisataModal.classList.remove('buka');
+});
 
-    document.getElementById('btnBackToDetail').addEventListener('click', () => {
-        viewBookingForm.classList.add('sembunyi');
-        viewDetailWisata.classList.remove('sembunyi');
-    });
+// 6. TOMBOL "TANYA WISATA" -> OTOMATIS BUKA CHATBOT LOMBOK24JAMSUPPORT
+document.getElementById('btnTanyaWisata').addEventListener('click', () => {
+    if (!wisataTerpilih) return;
+    wisataModal.classList.remove('buka');
+    chatbotWindow.classList.add('buka');
+    kirimPesanKeBot(`Tolong jelaskan lengkap tentang ${wisataTerpilih.nama}`);
+});
 
-    document.getElementById('formBookingWisata').addEventListener('submit', (e) => {
-        e.preventDefault();
-        const total = hitungTotalBooking();
-        const kode = 'LMB-' + Math.floor(100000 + Math.random() * 900000);
-        const metode = document.querySelector('input[name="metodeBayar"]:checked').value;
-        const opsiKendaraan = bookKendaraan.options[bookKendaraan.selectedIndex].text;
+// 7. FITUR LOGIN / BUAT AKUN (IN-MEMORY TEMPORARY DATABASE)
+const tempUsersDB = [
+    { username: 'admin', password: '123', passAlt: 'admin123', nama: 'Administrator Lombok', role: 'Admin' },
+    { username: 'user', password: '123', passAlt: 'user123', nama: 'Wisatawan Nusantara', role: 'Pengguna' }
+];
+let currentUser = null;
 
-        document.getElementById('strukKode').textContent = kode;
-        document.getElementById('strukWaktu').textContent = new Date().toLocaleString('id-ID');
-        document.getElementById('strukWisata').textContent = wisataTerpilih.nama;
-        document.getElementById('strukNama').textContent = document.getElementById('bookNama').value;
-        document.getElementById('strukHp').textContent = document.getElementById('bookHp').value;
-        document.getElementById('strukAlamat').textContent = document.getElementById('bookAlamat').value;
-        document.getElementById('strukTanggal').textContent = document.getElementById('bookTanggal').value;
-        document.getElementById('strukJumlah').textContent = `${bookJumlah.value} Orang`;
-        document.getElementById('strukKendaraan').textContent = opsiKendaraan;
-        document.getElementById('strukMetode').textContent = metode;
-        document.getElementById('strukTotal').textContent = `Rp ${total.toLocaleString('id-ID')}`;
+const authModal = document.getElementById('authModal');
+const authArea = document.getElementById('authArea');
+const formLogin = document.getElementById('formLogin');
+const formRegister = document.getElementById('formRegister');
+const tabLogin = document.getElementById('tabLogin');
+const tabRegister = document.getElementById('tabRegister');
 
-        viewBookingForm.classList.add('sembunyi');
-        viewReceipt.classList.remove('sembunyi');
-    });
-
-    document.getElementById('btnDoneReceipt').addEventListener('click', () => {
-        wisataModal.classList.remove('buka');
-    });
-
-    document.getElementById('btnTanyaWisata').addEventListener('click', () => {
-        if (!wisataTerpilih) return;
-        wisataModal.classList.remove('buka');
-        chatbotWindow.classList.add('buka');
-        kirimPesanKeBot(`Tolong jelaskan lengkap tentang ${wisataTerpilih.nama}`);
-    });
-
-    // 7. AUTH LOGIN & REGISTER
-    const tempUsersDB = [
-        { username: 'admin', password: '123', passAlt: 'admin123', nama: 'Administrator Lombok', role: 'Admin' },
-        { username: 'user', password: '123', passAlt: 'user123', nama: 'Wisatawan Nusantara', role: 'Pengguna' }
-    ];
-    let currentUser = null;
-
-    const authModal = document.getElementById('authModal');
-    const authArea = document.getElementById('authArea');
-    const formLogin = document.getElementById('formLogin');
-    const formRegister = document.getElementById('formRegister');
-    const tabLogin = document.getElementById('tabLogin');
-    const tabRegister = document.getElementById('tabRegister');
-
-    function renderAuthNavbar() {
-        if (currentUser) {
-            authArea.innerHTML = `
-                <div class="user-pill">
-                    <span>👤 ${currentUser.nama} (${currentUser.role})</span>
-                    <button class="btn-logout" id="btnLogout" type="button">Keluar</button>
-                </div>
-            `;
-            document.getElementById('btnLogout').addEventListener('click', () => {
-                currentUser = null;
-                renderAuthNavbar();
-            });
-        } else {
-            authArea.innerHTML = `<button class="btn-auth" id="btnOpenAuth" type="button">👤 Login / Daftar</button>`;
-            document.getElementById('btnOpenAuth').addEventListener('click', () => authModal.classList.add('buka'));
-        }
-    }
-    renderAuthNavbar();
-
-    document.getElementById('closeAuthModal').addEventListener('click', () => authModal.classList.remove('buka'));
-
-    tabLogin.addEventListener('click', () => {
-        tabLogin.classList.add('aktif');
-        tabRegister.classList.remove('aktif');
-        formLogin.classList.remove('sembunyi');
-        formRegister.classList.add('sembunyi');
-    });
-
-    tabRegister.addEventListener('click', () => {
-        tabRegister.classList.add('aktif');
-        tabLogin.classList.remove('aktif');
-        formRegister.classList.remove('sembunyi');
-        formLogin.classList.add('sembunyi');
-    });
-
-    formLogin.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const u = document.getElementById('loginUser').value.trim();
-        const p = document.getElementById('loginPass').value.trim();
-        const found = tempUsersDB.find(acc => acc.username.toLowerCase() === u.toLowerCase() && (acc.password === p || acc.passAlt === p));
-
-        if (found) {
-            currentUser = found;
-            authModal.classList.remove('buka');
+function renderAuthNavbar() {
+    if (currentUser) {
+        authArea.innerHTML = `
+            <div class="user-pill">
+                <span>👤 ${currentUser.nama} (${currentUser.role})</span>
+                <button class="btn-logout" id="btnLogout" type="button">Keluar</button>
+            </div>
+        `;
+        document.getElementById('btnLogout').addEventListener('click', () => {
+            currentUser = null;
             renderAuthNavbar();
-        } else {
-            document.getElementById('authMsg').textContent = 'Username atau password salah!';
-        }
-    });
+        });
+    } else {
+        authArea.innerHTML = `<button class="btn-auth" id="btnOpenAuth" type="button">👤 Login / Daftar</button>`;
+        document.getElementById('btnOpenAuth').addEventListener('click', () => authModal.classList.add('buka'));
+    }
+}
+renderAuthNavbar();
 
-    formRegister.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const nama = document.getElementById('regNama').value.trim();
-        const username = document.getElementById('regUser').value.trim();
-        const password = document.getElementById('regPass').value.trim();
+document.getElementById('closeAuthModal').addEventListener('click', () => authModal.classList.remove('buka'));
 
-        if (tempUsersDB.some(acc => acc.username.toLowerCase() === username.toLowerCase())) {
-            document.getElementById('regMsg').textContent = 'Username sudah terdaftar!';
-            return;
-        }
+tabLogin.addEventListener('click', () => {
+    tabLogin.classList.add('aktif');
+    tabRegister.classList.remove('aktif');
+    formLogin.classList.remove('sembunyi');
+    formRegister.classList.add('sembunyi');
+});
 
-        const userBaru = { username, password, passAlt: password, nama, role: 'Pengguna' };
-        tempUsersDB.push(userBaru);
-        currentUser = userBaru;
+tabRegister.addEventListener('click', () => {
+    tabRegister.classList.add('aktif');
+    tabLogin.classList.remove('aktif');
+    formRegister.classList.remove('sembunyi');
+    formLogin.classList.add('sembunyi');
+});
+
+formLogin.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const u = document.getElementById('loginUser').value.trim();
+    const p = document.getElementById('loginPass').value.trim();
+    const found = tempUsersDB.find(acc => acc.username.toLowerCase() === u.toLowerCase() && (acc.password === p || acc.passAlt === p));
+
+    if (found) {
+        currentUser = found;
         authModal.classList.remove('buka');
         renderAuthNavbar();
-    });
+    } else {
+        document.getElementById('authMsg').textContent = 'Username atau password salah! Coba admin / admin123';
+    }
+});
 
-    // =====================================================================
+formRegister.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const nama = document.getElementById('regNama').value.trim();
+    const username = document.getElementById('regUser').value.trim();
+    const password = document.getElementById('regPass').value.trim();
+
+    if (tempUsersDB.some(acc => acc.username.toLowerCase() === username.toLowerCase())) {
+        document.getElementById('regMsg').textContent = 'Username sudah terdaftar di sesi ini!';
+        return;
+    }
+
+    const userBaru = { username, password, passAlt: password, nama, role: 'Pengguna' };
+    tempUsersDB.push(userBaru);
+    currentUser = userBaru;
+    authModal.classList.remove('buka');
+    renderAuthNavbar();
+});
+
+// =====================================================================
 // ==== 8. CHATBOT AI GEMINI + LIVE CHAT 2 ARAH CS VIA TELEGRAM     ====
 // =====================================================================
 
@@ -408,14 +409,17 @@ const chatbotMessages = document.getElementById('chatbotMessages');
 const chatbotForm = document.getElementById('chatbotForm');
 const chatbotInput = document.getElementById('chatbotInput');
 
-// State untuk sesi Live CS Manusia
+// State untuk sesi Live CS Manusia (Selalu buat sesi baru setiap komplain dimulai)
 let modeLiveCS = false;
 let timerPollingCS = null;
 let lastTelegramMsgId = 0;
-let sessionIdCS = localStorage.getItem('lombok_cs_session');
-if (!sessionIdCS) {
+let sessionStartTime = 0;
+let sessionIdCS = '';
+
+function buatSessionIdBaru() {
     sessionIdCS = 'CS' + Math.floor(10000 + Math.random() * 90000);
-    localStorage.setItem('lombok_cs_session', sessionIdCS);
+    sessionStartTime = Math.floor(Date.now() / 1000) - 5;
+    lastTelegramMsgId = 0;
 }
 
 if (chatbotToggle && chatbotWindow && chatbotClose) {
@@ -447,7 +451,7 @@ function bukaWisataDariChat(idWisata) {
 function cekButuhCSManusia(pesan) {
     const teks = pesan.toLowerCase();
     const kataKunciMasalah = [
-        'kendala', 'komplain', 'masalah', 'gagal', 'error', 'eror',
+        'kendala', 'komplain', 'masalah', 'problem', 'gagal', 'error', 'eror',
         'bayar', 'pembayaran', 'refund', 'uang kembali', 'struk',
         'tiket tidak', 'belum masuk', 'cs', 'customer service',
         'admin', 'manusia', 'orang asli', 'bantuan', 'tolong'
@@ -455,10 +459,12 @@ function cekButuhCSManusia(pesan) {
     return kataKunciMasalah.some(kata => teks.includes(kata));
 }
 
-// Mengaktifkan Mode Live Chat CS Manusia & Memulai Pengecekan Balasan Telegram
+// Mengaktifkan Mode Live Chat CS Manusia dengan Sesi Baru
 function aktifkanModeLiveCS(pesanAwalUser = '') {
     if (!modeLiveCS) {
         modeLiveCS = true;
+        buatSessionIdBaru(); // Otomatis generate ID Sesi baru setiap kali masuk mode CS!
+
         tambahBubbleChat(
             `🔔 <strong>Mode Live CS Aktif (ID: #${sessionIdCS})</strong><br>` +
             `Anda kini terhubung langsung dengan <strong>Customer Service Manusia</strong> kami. Pesan Anda telah diteruskan ke HP Admin, mohon tunggu balasan di ruang chat ini.<br>` +
@@ -466,7 +472,6 @@ function aktifkanModeLiveCS(pesanAwalUser = '') {
             'bot'
         );
 
-        // Cek balasan dari Telegram setiap 3 detik
         if (timerPollingCS) clearInterval(timerPollingCS);
         timerPollingCS = setInterval(cekBalasanDariTelegram, 3000);
     }
@@ -479,6 +484,7 @@ function aktifkanModeLiveCS(pesanAwalUser = '') {
 function matikanModeLiveCS() {
     modeLiveCS = false;
     if (timerPollingCS) clearInterval(timerPollingCS);
+    sessionIdCS = '';
     tambahBubbleChat(`✅ Sesi dengan CS Manusia telah diakhiri. Anda kembali terhubung dengan Asisten AI Lombok24jamSupport.`, 'bot');
 }
 
@@ -503,9 +509,9 @@ async function kirimPesanKeTelegram(pesanUser) {
 }
 
 async function cekBalasanDariTelegram() {
-    if (!modeLiveCS) return;
+    if (!modeLiveCS || !sessionIdCS) return;
     try {
-        const res = await fetch(`/api/cs-telegram?sessionId=${sessionIdCS}&after=${lastTelegramMsgId}`);
+        const res = await fetch(`/api/cs-telegram?sessionId=${sessionIdCS}&after=${lastTelegramMsgId}&since=${sessionStartTime}`);
         if (!res.ok) return;
         const data = await res.json();
 
@@ -588,48 +594,48 @@ document.querySelectorAll('#chatbotTemplates button').forEach(btn => {
     });
 });
 
-    // 9. SLIDESHOW HERO & ANIMASI ANGKA
-    const slide = document.querySelectorAll('.slide');
-    const titik = document.getElementById('titik');
-    const keterangan = document.getElementById('keterangan');
-    let aktif = 0, timer;
+// 9. SLIDESHOW HERO & ANIMASI ANGKA KATEGORI (DARI KODE ASLI)
+const slide = document.querySelectorAll('.slide');
+const titik = document.getElementById('titik');
+const keterangan = document.getElementById('keterangan');
+let aktif = 0, timer;
 
-    slide.forEach((s, i) => {
-        const t = document.createElement('button');
-        t.setAttribute('aria-label', 'Foto ' + (i + 1));
-        t.addEventListener('click', () => { tampil(i); mulai(); });
-        titik.appendChild(t);
+slide.forEach((s, i) => {
+    const t = document.createElement('button');
+    t.setAttribute('aria-label', 'Foto ' + (i + 1));
+    t.addEventListener('click', () => { tampil(i); mulai(); });
+    titik.appendChild(t);
+});
+
+function tampil(i) {
+    aktif = i;
+    slide.forEach((s, n) => s.classList.toggle('aktif', n === i));
+    titik.querySelectorAll('button').forEach((t, n) => t.classList.toggle('aktif', n === i));
+    keterangan.textContent = slide[i].dataset.nama;
+}
+
+function mulai() {
+    clearInterval(timer);
+    timer = setInterval(() => tampil((aktif + 1) % slide.length), 5500);
+}
+tampil(0);
+mulai();
+
+const pengamat = new IntersectionObserver((daftar) => {
+    daftar.forEach((x) => {
+        if (!x.isIntersecting) return;
+        const el = x.target, tujuan = Number(el.dataset.angka);
+        let n = 0;
+        const t = setInterval(() => {
+            n++;
+            el.textContent = n;
+            if (n >= tujuan) clearInterval(t);
+        }, 110);
+        pengamat.unobserve(el);
     });
+}, { threshold: 0.6 });
 
-    function tampil(i) {
-        aktif = i;
-        slide.forEach((s, n) => s.classList.toggle('aktif', n === i));
-        titik.querySelectorAll('button').forEach((t, n) => t.classList.toggle('aktif', n === i));
-        keterangan.textContent = slide[i].dataset.nama;
-    }
-
-    function mulai() {
-        clearInterval(timer);
-        timer = setInterval(() => tampil((aktif + 1) % slide.length), 5500);
-    }
-    tampil(0);
-    mulai();
-
-    const pengamat = new IntersectionObserver((daftar) => {
-        daftar.forEach((x) => {
-            if (!x.isIntersecting) return;
-            const el = x.target, tujuan = Number(el.dataset.angka);
-            let n = 0;
-            const t = setInterval(() => {
-                n++;
-                el.textContent = n;
-                if (n >= tujuan) clearInterval(t);
-            }, 110);
-            pengamat.unobserve(el);
-        });
-    }, { threshold: 0.6 });
-
-    document.querySelectorAll('.kategori-info b').forEach((b) => {
-        b.textContent = 0;
-        pengamat.observe(b);
-    });
+document.querySelectorAll('.kategori-info b').forEach((b) => {
+    b.textContent = 0;
+    pengamat.observe(b);
+});

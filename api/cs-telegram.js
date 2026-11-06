@@ -35,10 +35,11 @@
         // 2. MENARIK BALASAN DARI ADMIN TELEGRAM KE LAYAR WEB PENGUNJUNG (GET)
         if (req.method === 'GET') {
         try {
-            const { sessionId, after } = req.query;
+            const { sessionId, after, since } = req.query;
             const afterId = parseInt(after || '0', 10);
+            const sinceTime = parseInt(since || '0', 10);
     
-            // Ambil riwayat update dari bot Telegram
+            // Ambil riwayat update terbaru dari bot Telegram
             const tgRes = await fetch(`https://api.telegram.org/bot${token}/getUpdates?limit=50`);
             const data = await tgRes.json();
     
@@ -51,11 +52,10 @@
             const msg = item.message;
             if (!msg || !msg.text) continue;
     
-            // Pastikan ini pesan baru yang belum pernah ditampilkan di web
+            // Filter agar hanya mengambil pesan baru pada sesi yang sedang aktif
             if (msg.message_id <= afterId) continue;
+            if (sinceTime > 0 && msg.date < sinceTime) continue;
     
-            // Cek apakah Admin me-reply pesan pengunjung yang sesuai dengan sessionId ini,
-            // ATAU menulis kode #sessionId secara manual
             const replyToText = msg.reply_to_message?.text || '';
             const cocokReply = replyToText.includes(`#${sessionId}`);
             const cocokTagManual = msg.text.includes(`#${sessionId}`);
