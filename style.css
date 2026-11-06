@@ -1323,3 +1323,125 @@
             width: 320px;
         }
     }
+
+    /* =====================================================================
+   PERBAIKAN TAMPILAN MOBILE (RESPONSIVE ANDROID / IPHONE)
+   ===================================================================== */
+
+html, body {
+    max-width: 100%;
+    overflow-x: hidden; /* Mencegah layar geser ke kanan / bocor kuning */
+}
+
+@media screen and (max-width: 768px) {
+    /* 1. Rapikan Header & Navbar */
+    header, .navbar, nav {
+        padding: 12px 15px !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 10px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Menu Navigasi (Home, Tentang, Daftar Wisata, Kategori) dibuat rapi di tengah */
+    .navbar ul, nav ul, .nav-links {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+        gap: 6px !important;
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 4px 0 !important;
+    }
+
+    .navbar a, nav a {
+        font-size: 0.85rem !important;
+        padding: 6px 12px !important;
+        white-space: nowrap;
+    }
+
+    /* 2. Kotak Search & Tombol Login disusun rapi tidak keluar jalur */
+    #navSearchBox, .nav-right, .header-right {
+        width: 100% !important;
+        max-width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        align-items: stretch !important;
+    }
+
+    #navSearchInput {
+        width: 100% !important;
+        box-sizing: border-box !important;
+        font-size: 0.9rem !important;
+    }
+
+    #authArea, .btn-auth, .user-pill {
+        width: 100% !important;
+        justify-content: center !important;
+        box-sizing: border-box !important;
+        text-align: center !important;
+    }
+
+    /* 3. Bagian Hero (Lombok, Where Paradise Comes Alive) */
+    .hero, #home {
+        min-height: auto !important;
+        padding: 35px 18px 90px 18px !important;
+        text-align: left !important;
+    }
+
+    .hero h1 {
+        font-size: 2.1rem !important;
+        line-height: 1.2 !important;
+    }
+
+    .hero p {
+        font-size: 0.92rem !important;
+        line-height: 1.5 !important;
+    }
+
+    /* 4. Bagian Tentang Lombok & Kartu Foto agar tidak melebar keluar layar */
+    .tentang-container, .about-section, #tentang {
+        flex-direction: column !important;
+        padding: 30px 18px !important;
+        overflow: hidden !important;
+    }
+
+    /* 5. Grid Daftar Kartu Wisata (1 Kolom Penuh di HP agar lega) */
+    #daftarClean {
+        grid-template-columns: 1fr !important;
+        gap: 16px !important;
+        padding: 0 15px !important;
+    }
+
+    /* 6. Tombol & Jendela Chatbot AI agar pas dengan layar HP */
+    #chatbotToggle {
+        bottom: 14px !important;
+        left: 14px !important;
+        right: 14px !important;
+        width: calc(100% - 28px) !important;
+        justify-content: center !important;
+        font-size: 0.88rem !important;
+        padding: 12px 16px !important;
+        box-sizing: border-box !important;
+    }
+
+    #chatbotWindow {
+        width: calc(100% - 24px) !important;
+        right: 12px !important;
+        left: 12px !important;
+        bottom: 70px !important;
+        max-height: 72vh !important;
+        box-sizing: border-box !important;
+    }
+
+    /* 7. Modal Detail Wisata & Form Booking di HP */
+    .modal-content, .wisata-modal-box {
+        width: 94% !important;
+        max-height: 88vh !important;
+        margin: 5vh auto !important;
+        padding: 15px !important;
+        overflow-y: auto !important;
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "name": "Wisata Alam Lombok",
+    "short_name": "Wisata Lombok",
+    "description": "Aplikasi Booking & Asisten AI 24 Jam Wisata Alam Lombok",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#0d47a1",
+    "theme_color": "#0d47a1",
+    "orientation": "portrait",
+    "icons": [
+      {
+        "src": "https://cdn-icons-png.flaticon.com/512/201/201623.png",
+        "sizes": "512x512",
+        "type": "image/png",
+        "purpose": "any maskable"
+      }
+    ]
+  }
